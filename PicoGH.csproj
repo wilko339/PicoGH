@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Version>1.0</Version>
+    <Title>PicoGH</Title>
+    <Description>Description of PicoGH</Description>
+    <TargetExt>.gha</TargetExt>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <Compile Remove="LEAP71_ShapeKernel\Examples\**" />
+    <Compile Remove="PicoGK\Examples\**" />
+    <EmbeddedResource Remove="LEAP71_ShapeKernel\Examples\**" />
+    <EmbeddedResource Remove="PicoGK\Examples\**" />
+    <None Remove="LEAP71_ShapeKernel\Examples\**" />
+    <None Remove="PicoGK\Examples\**" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Compile Remove="LEAP71_ShapeKernel\ShapeKernel\BaseShapes\BaseLogoBox.cs" />
+    <Compile Remove="PicoGK\PicoGK_Cli.cs" />
+    <Compile Remove="PicoGK\PicoGK_Csv.cs" />
+    <Compile Remove="PicoGK\PicoGK_Image.cs" />
+    <Compile Remove="PicoGK\PicoGK_ImageIo.cs" />
+    <Compile Remove="PicoGK\PicoGK_Slice.cs" />
+    <Compile Remove="PicoGK\PicoGK_Viewer.cs" />
+    <Compile Remove="PicoGK\PicoGK_ViewerActions.cs" />
+    <Compile Remove="PicoGK\PicoGK_ViewerAnimation.cs" />
+    <Compile Remove="PicoGK\PicoGK_ViewerKeyboard.cs" />
+    <Compile Remove="PicoGK\PicoGK_ViewerTimelapse.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="MathFloat" Version="1.0.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="PicoGH\Modulations\" />
+  </ItemGroup>
+
+</Project>
