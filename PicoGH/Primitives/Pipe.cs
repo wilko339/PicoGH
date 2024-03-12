@@ -7,7 +7,7 @@ using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
 using Rhino.Geometry;
 
-namespace PicoGH.PicoGH.Primitives
+namespace PicoGH.Primitives
 {
     public class Pipe : GH_Component
     {

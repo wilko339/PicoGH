@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
+using PicoGH.Interfaces;
 using PicoGH.PicoGH.Types;
 using PicoGH.Types;
 using Rhino.Geometry;
 
-namespace PicoGH.PicoGH.Operations
+namespace PicoGH.Operations
 {
     public class ModulatePipe : GH_Component
     {
@@ -16,8 +17,8 @@ namespace PicoGH.PicoGH.Operations
         /// Initializes a new instance of the ModulatePipe class.
         /// </summary>
         public ModulatePipe()
-          : base("PicoModulatePipe", "ModPipe",
-              "Applies surface modulations to change the inner and outer radii of a pipe or pipe segment.",
+          : base("PicoApplyModulation", "ApplyMod",
+              "Applies surface modulations to change the inner and outer radii of a compatible object.",
               "PicoGH", "Modulations")
         {
         }
@@ -27,7 +28,7 @@ namespace PicoGH.PicoGH.Operations
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Voxels", "V", "Input pipe or pipe segment voxels.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "Input shape to apply modulations.", GH_ParamAccess.item);
             pManager.AddGenericParameter("InnerMod", "I", "Modulation to apply to the inner radius.", GH_ParamAccess.item);
             pManager.AddGenericParameter("OuterMod", "I", "Modulation to apply to the outer radius.", GH_ParamAccess.item);
 
@@ -47,42 +48,18 @@ namespace PicoGH.PicoGH.Operations
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            PicoGHPipeSegment pipeSegment = null;
-            if (!DA.GetData(0, ref pipeSegment)) return;
+            IModulate inputData = null;
+            if (!DA.GetData(0, ref inputData)) return;
 
-            PicoGHModulation innerMod = null;
-            PicoGHModulation outerMod = null;
+            if (!(inputData is IModulate)) return;
 
-            if (!DA.GetData(1, ref innerMod)) return;
-            if (!DA.GetData(2, ref outerMod)) return;
+            PicoGHModulation modulation1 = null;
+            PicoGHModulation modulation2 = null;
 
-            SurfaceModulation innerSurf = null;
-            SurfaceModulation outerSurf = null;
+            if (!DA.GetData(1, ref modulation1)) return;
+            if (!DA.GetData(2, ref modulation2)) return;
 
-            if (innerMod._sModulation is null)
-            {
-                innerSurf = new SurfaceModulation(innerMod._lModulation);
-            }
-            else
-            {
-                innerSurf = innerMod._sModulation;
-            }
-
-            if (outerMod._sModulation is null)
-            {
-                outerSurf = new SurfaceModulation(outerMod._lModulation);
-            }
-            else
-            {
-                outerSurf = outerMod._sModulation;
-            }
-
-            pipeSegment._pipeSegment.SetRadius(innerSurf, outerSurf);
-
-            // I need some kind of method that sets the mesh resolution automatically...
-            pipeSegment._pipeSegment.SetLengthSteps(100);
-
-            PicoGHPipeSegment output = new PicoGHPipeSegment(pipeSegment._pipeSegment);
+            PicoGHVoxels output = inputData.SetModulation(modulation1, modulation2);
 
             DA.SetData(0, output);
         }

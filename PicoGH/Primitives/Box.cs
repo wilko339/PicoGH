@@ -6,6 +6,7 @@ using Grasshopper.Kernel;
 using Leap71.ShapeKernel;
 using Rhino.Geometry;
 using PicoGH.PicoGH.Types;
+using PicoGH.PicoGH.Classes;
 
 namespace PicoGH.PicoGH.Primitives
 {
@@ -73,7 +74,7 @@ namespace PicoGH.PicoGH.Primitives
             box.SetWidthSteps(100);
             box.SetLengthSteps(100);
 
-            PicoGHVoxels output = new PicoGHVoxels(box.voxConstruct(), box.mshConstruct());
+            PicoGHBox output = new PicoGHBox(box);
 
             DA.SetData(0, output);
         }
