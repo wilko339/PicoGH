@@ -6,6 +6,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
 using Rhino.Geometry;
+using PicoGH.PicoGH.Classes;
 
 namespace PicoGH.Primitives
 {
@@ -27,8 +28,8 @@ namespace PicoGH.Primitives
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Frames", "F", "Frames", GH_ParamAccess.list);
-            pManager.AddNumberParameter("OuterRadius", "O", "Outer radius.", GH_ParamAccess.item);
             pManager.AddNumberParameter("InnerRadius", "I", "Inner radius.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("OuterRadius", "O", "Outer radius.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -48,18 +49,17 @@ namespace PicoGH.Primitives
             List<Rhino.Geometry.Plane> frames = new List<Rhino.Geometry.Plane>();
             if (!DA.GetDataList(0, frames)) return;
 
-            GH_Number outerRadius = new GH_Number();
-            if (!DA.GetData(1, ref outerRadius)) return;
-
             GH_Number innerRadius = new GH_Number();
+            if (!DA.GetData(1, ref innerRadius)) return;
+
+            GH_Number outerRadius = new GH_Number();
             if (!DA.GetData(2, ref outerRadius)) return;
             
             Frames localFrames = Utilities.RhinoPlanesToPicoFrames(frames);
 
             BasePipe pipe = new BasePipe(localFrames, (float)innerRadius.Value, (float)outerRadius.Value);
 
-            PicoGHVoxels output = new PicoGHVoxels(
-                pipe.voxConstruct(), pipe.mshConstruct());
+            PicoGHPipe output = new PicoGHPipe(pipe);
 
             DA.SetData(0, output);
         }
