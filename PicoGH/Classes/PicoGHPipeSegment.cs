@@ -43,6 +43,8 @@ namespace PicoGH.Types
 
             output._pipeSegment.SetRadius(surfMod1, surfMod2);
             output._pipeSegment.SetLengthSteps(100);
+            output._pipeSegment.SetRadialSteps(10);
+            output._pipeSegment.SetPolarSteps(10);
             
             return output;
         }
