@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Leap71.ShapeKernel;
 using Rhino.Geometry;
+using PicoGH.PicoGH.Types;
 
 namespace PicoGH.PicoGH.Primitives
 {
@@ -26,8 +27,8 @@ namespace PicoGH.PicoGH.Primitives
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Frames", "F", "Frames", GH_ParamAccess.list);
-            //pManager.AddGenericParameter("WidthMod", "WMod", "Width modulation.", GH_ParamAccess.item);
-            //pManager.AddGenericParameter("DepthMod", "DMod", "Depth modulation.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("WidthMod", "WMod", "Width modulation.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("DepthMod", "DMod", "Depth modulation.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -47,11 +48,13 @@ namespace PicoGH.PicoGH.Primitives
             List<Rhino.Geometry.Plane> frames = new List<Rhino.Geometry.Plane>();
             if (!DA.GetDataList(0, frames)) return;
 
-            //LineModulation wMod = null;
-            //if (!DA.GetData(1, ref wMod)) return;
+            if (frames.Count == 0) return;
 
-            //LineModulation hMod = null;
-            //if (!DA.GetData(2, ref hMod)) return;
+            PicoGHModulation wMod = null;
+            if (!DA.GetData(1, ref wMod)) return;
+
+            PicoGHModulation hMod = null;
+            if (!DA.GetData(2, ref hMod)) return;
 
             List<Vector3> aPoints = new List<Vector3>();
 
@@ -64,6 +67,11 @@ namespace PicoGH.PicoGH.Primitives
             Frames localFrames = new Frames(aPoints, Frames.EFrameType.SPHERICAL);
 
             BaseBox box  = new BaseBox(localFrames);
+            box.SetWidth(wMod._lModulation);
+            box.SetDepth(hMod._lModulation);
+            box.SetDepthSteps(100);
+            box.SetWidthSteps(100);
+            box.SetLengthSteps(100);
 
             PicoGHVoxels output = new PicoGHVoxels(box.voxConstruct(), box.mshConstruct());
 

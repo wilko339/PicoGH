@@ -54,16 +54,7 @@ namespace PicoGH.PicoGH.Primitives
             GH_Number innerRadius = new GH_Number();
             if (!DA.GetData(2, ref outerRadius)) return;
             
-            List<Vector3> aPoints = new List<Vector3>();
-
-
-            for (int i = 0; i < frames.Count; i++)
-            {
-                Rhino.Geometry.Plane frame = frames[i];
-                aPoints.Add(new Vector3((float)frame.OriginX, (float)frame.OriginY, (float)frame.OriginZ));
-            }
-
-            Frames localFrames = new Frames(aPoints, Frames.EFrameType.SPHERICAL);
+            Frames localFrames = Utilities.RhinoPlanesToPicoFrames(frames);
 
             BasePipe pipe = new BasePipe(localFrames, (float)innerRadius.Value, (float)outerRadius.Value);
 
