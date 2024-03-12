@@ -20,7 +20,7 @@ namespace PicoGH
         public PicoGK.Mesh _pmesh;
         public PicoGK.Voxels _pvoxels;
 
-        Rhino.Geometry.Mesh mesh;
+        public Rhino.Geometry.Mesh _rmesh;
 
         public PicoGHVoxels() { }
 
@@ -29,37 +29,12 @@ namespace PicoGH
             _pvoxels = pvoxels;
             _pmesh = pmesh;
 
-            mesh = GenerateMesh();
+            _rmesh = GenerateMesh();
         }
 
         public Rhino.Geometry.Mesh GenerateMesh()
         {
-            int triangleCount = _pmesh.nTriangleCount();
-            int vertexCount = _pmesh.nVertexCount();
-
-            var previewMeshFaces = new Rhino.Geometry.MeshFace[triangleCount];
-            var meshVertices = new Point3d[vertexCount];
-
-            for (int i = 0; i < vertexCount; i++)
-            {
-                var vertex = _pmesh.vecVertexAt(i);
-                meshVertices[i] = new Point3d(vertex.X, vertex.Y, vertex.Z);
-            }
-
-            Rhino.Geometry.Mesh mesh = new Rhino.Geometry.Mesh();
-
-            mesh.Vertices.AddVertices(meshVertices);
-
-            for (int i = 0; i < triangleCount; i++)
-            {
-                var triangle = _pmesh.oTriangleAt(i);
-                previewMeshFaces[i] = new MeshFace(triangle.A, triangle.B, triangle.C);
-            }
-
-            mesh.Faces.AddFaces(previewMeshFaces);
-            mesh.RebuildNormals();
-
-            return mesh;
+            return Utilities.PicoMeshToRhinoMesh(_pmesh);
         }
 
         public BoundingBox ClippingBox
@@ -69,7 +44,7 @@ namespace PicoGH
 
         public override BoundingBox Boundingbox
         {
-            get { return mesh.GetBoundingBox(false); }
+            get { return _rmesh.GetBoundingBox(false); }
         }
 
         public override string TypeName
@@ -84,12 +59,12 @@ namespace PicoGH
 
         public void DrawViewportMeshes(GH_PreviewMeshArgs args)
         {
-            args.Pipeline.DrawMeshShaded(mesh, args.Material);
+            args.Pipeline.DrawMeshShaded(_rmesh, args.Material);
         }
 
         public void DrawViewportWires(GH_PreviewWireArgs args)
         {
-            args.Pipeline.DrawMeshWires(mesh, args.Color);
+            
         }
 
         public override IGH_GeometricGoo DuplicateGeometry()
