@@ -35,9 +35,5 @@
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="MathFloat" Version="1.0.1" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="PicoGH\Modulations\" />
-  </ItemGroup>
 
 </Project>
