@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
-using Leap71.ShapeKernel;
 using PicoGH.Interfaces;
-using PicoGH.PicoGH.Types;
 using PicoGH.Types;
-using Rhino.Geometry;
 
 namespace PicoGH.Operations
 {

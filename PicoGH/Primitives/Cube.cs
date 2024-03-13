@@ -10,6 +10,7 @@ using Leap71.ShapeKernel;
 using System.Diagnostics;
 using Rhino.Geometry.Collections;
 using Rhino.DocObjects;
+using PicoGH.Classes;
 
 namespace PicoGH
 {
@@ -54,22 +55,19 @@ namespace PicoGH
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Rhino.Geometry.Plane basePlane = new Rhino.Geometry.Plane();
+            var basePlane = new Rhino.Geometry.Plane();
             if (!DA.GetData(0, ref basePlane)) return;
 
-            GH_Number edgeLength = new GH_Number();
+            var edgeLength = new GH_Number();
             if (!DA.GetData(1, ref edgeLength)) return;
 
-            Point3d origin = basePlane.Origin;
-            LocalFrame baseFrame = new LocalFrame(new Vector3((float)origin.X, (float)origin.Y, (float)origin.Z));
-            BaseBox box = new BaseBox(baseFrame, (float)edgeLength.Value, (float)edgeLength.Value, (float)edgeLength.Value);
+            var origin = basePlane.Origin;
+            var baseFrame = new LocalFrame(new Vector3((float)origin.X, (float)origin.Y, (float)origin.Z));
+            var box = new BaseBox(baseFrame, (float)edgeLength.Value, (float)edgeLength.Value, (float)edgeLength.Value);
 
-            Voxels voxels = box.voxConstruct();
-            PicoGK.Mesh mesh = box.mshConstruct();
+            var voxels = new PicoGHBox(box);
 
-            var _voxels = new PicoGHVoxels(voxels, mesh);
-
-            DA.SetData(0, _voxels);
+            DA.SetData(0, voxels);
         }
 
 

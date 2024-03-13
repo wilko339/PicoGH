@@ -4,11 +4,10 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Leap71.ShapeKernel;
-using Rhino.Geometry;
-using PicoGH.PicoGH.Types;
-using PicoGH.PicoGH.Classes;
+using PicoGH.Types;
+using PicoGH.Classes;
 
-namespace PicoGH.PicoGH.Primitives
+namespace PicoGH.Primitives
 {
     public class Box : GH_Component
     {

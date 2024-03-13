@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Leap71.ShapeKernel;
 
-namespace PicoGH.PicoGH.Types
+namespace PicoGH.Types
 {
     public class PicoGHModulation
     {

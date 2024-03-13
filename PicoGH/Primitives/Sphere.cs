@@ -4,7 +4,7 @@ using System.Numerics;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
-using PicoGK;
+using PicoGH.Classes;
 using Rhino.Geometry;
 
 namespace PicoGH
@@ -45,23 +45,20 @@ namespace PicoGH
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Rhino.Geometry.Plane basePlane = new Rhino.Geometry.Plane();
+            var basePlane = new Rhino.Geometry.Plane();
             if (!DA.GetData(0, ref basePlane)) return;
 
-            GH_Number radius = new GH_Number();
+            var radius = new GH_Number();
             if (!DA.GetData(1, ref radius)) return;
 
-            Point3d origin = basePlane.Origin;
-            LocalFrame baseFrame = new LocalFrame(new Vector3((float)origin.X, (float)origin.Y, (float)origin.Z));
+            var origin = basePlane.Origin;
+            var baseFrame = new LocalFrame(new Vector3((float)origin.X, (float)origin.Y, (float)origin.Z));
 
-            BaseSphere sphere = new BaseSphere(baseFrame, (float)radius.Value);
+            var sphere = new BaseSphere(baseFrame, (float)radius.Value);
             sphere.SetPolarSteps(10);
             sphere.SetAzimuthalSteps(10);
 
-            Voxels voxels = sphere.voxConstruct();
-            PicoGK.Mesh mesh = sphere.mshConstruct();
-
-            var _voxels = new PicoGHVoxels(voxels, mesh);
+            var _voxels = new PicoGHSphere(sphere);
 
             DA.SetData(0, _voxels);
         }

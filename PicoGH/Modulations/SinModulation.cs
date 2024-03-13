@@ -2,10 +2,9 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
-using PicoGH.PicoGH.Types;
-using Rhino.Geometry;
+using PicoGH.Types;
 
-namespace PicoGH.PicoGH.Modulations
+namespace PicoGH.Modulations
 {
     public class SinModulation : GH_Component
     {
