@@ -43,9 +43,7 @@ namespace PicoGH.PicoGH.IO
             PicoGHVoxels inputVoxels = new PicoGHVoxels();
             if (!DA.GetData(0, ref inputVoxels)) return;
 
-            PicoGK.Mesh outputMesh = new PicoGK.Mesh(inputVoxels._pvoxels);
-
-            DA.SetData(0, Utilities.PicoMeshToRhinoMesh(outputMesh));
+            DA.SetData(0, Utilities.PicoMeshToRhinoMesh(inputVoxels.GeneratePMesh()));
 
         }
 
