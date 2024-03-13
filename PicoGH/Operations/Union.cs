@@ -48,10 +48,26 @@ namespace PicoGH
             if (!DA.GetData(1, ref b));
 
             Voxels result = new Voxels();
-            result.BoolAdd(a._pvoxels);
-            result.BoolAdd(b._pvoxels);
+            if (a.PVoxels is null)
+            {
+                result.BoolAdd(a.GenerateVoxels());
+            }
+            else
+            {
+                result.BoolAdd(a.PVoxels);
+            }
 
-            PicoGHVoxels output = new PicoGHVoxels(result, new PicoGK.Mesh(result));
+            if (b.PVoxels is null)
+            { 
+                result.BoolAdd(b.GenerateVoxels());
+            }
+            else 
+            {
+                result.BoolAdd(b.PVoxels);
+            }
+            result.BoolAdd(b.PVoxels);
+
+            PicoGHVoxels output = new PicoGHVoxels(result);
 
             DA.SetData(0, output);
         }
