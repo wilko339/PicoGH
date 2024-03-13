@@ -58,9 +58,9 @@ namespace PicoGH.PicoGH.IO
                 pMesh.nAddTriangle(triangle);
             }
 
-            Voxels voxelised = new Voxels(pMesh);
+            Voxels voxels = new Voxels(pMesh);
 
-            var output = new PicoGHVoxels(voxelised, pMesh);
+            var output = new PicoGHVoxels(voxels);
             DA.SetData(0, output);
         }
 
