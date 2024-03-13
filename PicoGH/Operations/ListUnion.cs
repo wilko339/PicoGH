@@ -48,10 +48,17 @@ namespace PicoGH
 
             foreach (PicoGHVoxels vox in input)
             {
-                boolVox.BoolAdd(vox._pvoxels);
+                if (vox.PVoxels is null)
+                {
+                    boolVox.BoolAdd(vox.GenerateVoxels());
+                }
+                else
+                {
+                    boolVox.BoolAdd(vox.PVoxels);
+                }
             }
 
-            PicoGHVoxels output = new PicoGHVoxels(boolVox, new PicoGK.Mesh(boolVox));
+            PicoGHVoxels output = new PicoGHVoxels(boolVox);
 
             DA.SetData(0, output);
 
