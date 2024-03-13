@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Leap71.ShapeKernel;
+﻿using Leap71.ShapeKernel;
 using PicoGH.Interfaces;
-using PicoGH.PicoGH.Types;
+using PicoGK;
 
 namespace PicoGH.Types
 {
     public class PicoGHPipeSegment : PicoGHVoxels, IModulate
     {
-        public BasePipeSegment _pipeSegment;
+        BasePipeSegment _BasePipeSegment;
 
         public PicoGHPipeSegment(BasePipeSegment pipeSegment)
         {
-            _pipeSegment = pipeSegment;
-            _pvoxels = _pipeSegment.voxConstruct();
-            _pmesh = _pipeSegment.mshConstruct();
-
-            _rmesh = Utilities.PicoMeshToRhinoMesh( _pmesh );
+            _BasePipeSegment = pipeSegment;
+            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
         }
 
         public PicoGHVoxels SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2)
@@ -39,14 +30,24 @@ namespace PicoGH.Types
                 surfMod2 = new SurfaceModulation(modulation2._lModulation);
             }
 
-            PicoGHPipeSegment output = new PicoGHPipeSegment(_pipeSegment);
+            PicoGHPipeSegment output = new PicoGHPipeSegment(_BasePipeSegment);
 
-            output._pipeSegment.SetRadius(surfMod1, surfMod2);
-            output._pipeSegment.SetLengthSteps(100);
-            output._pipeSegment.SetRadialSteps(10);
-            output._pipeSegment.SetPolarSteps(10);
+            output._BasePipeSegment.SetRadius(surfMod1, surfMod2);
+            output._BasePipeSegment.SetLengthSteps(100);
+            output._BasePipeSegment.SetRadialSteps(10);
+            output._BasePipeSegment.SetPolarSteps(10);
             
             return output;
+        }
+
+        public override Mesh GeneratePMesh()
+        {
+            return _BasePipeSegment.mshConstruct();
+        }
+
+        public override Voxels GenerateVoxels()
+        {
+            return _BasePipeSegment.voxConstruct();
         }
     }
 }

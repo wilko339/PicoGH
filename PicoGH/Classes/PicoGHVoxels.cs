@@ -1,51 +1,78 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using PicoGK;
-using Rhino.DocObjects;
 using Rhino.Geometry;
-using Rhino.Render;
 
 namespace PicoGH
 {
     public class PicoGHVoxels : GH_GeometricGoo<Rhino.Geometry.Mesh>, IGH_PreviewData
     {
-        public PicoGK.Mesh _pmesh;
-        public PicoGK.Voxels _pvoxels;
+        public PicoGK.Mesh PMesh;
+        public PicoGK.Voxels PVoxels;
 
-        public Rhino.Geometry.Mesh _rmesh;
+        private Rhino.Geometry.Mesh _RMesh;
 
-        public PicoGHVoxels() { }
-
-        public PicoGHVoxels(PicoGK.Voxels pvoxels, PicoGK.Mesh pmesh)
-        {
-            _pvoxels = pvoxels;
-            _pmesh = pmesh;
-
-            _rmesh = GenerateMesh();
+        public Rhino.Geometry.Mesh RMesh
+        {  get
+            {
+                if (_RMesh == null)
+                {
+                    _RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
+                }
+                return _RMesh;
+            }
+           set
+            {
+                _RMesh = value;
+            }
         }
 
-        public Rhino.Geometry.Mesh GenerateMesh()
+        public PicoGHVoxels() { }
+        public PicoGHVoxels(PicoGK.Voxels voxels)
         {
-            return Utilities.PicoMeshToRhinoMesh(_pmesh);
+            PVoxels = voxels;
+        }
+
+        public virtual Voxels GenerateVoxels()
+        {
+            throw new NotImplementedException("Child must override this method.");
+        }
+
+        public virtual PicoGK.Mesh GeneratePMesh()
+        {
+            // This is usually overridden by a child class, but sometimes we only have the voxel field (such as converting a mesh to voxels).
+            return PVoxels.mshAsMesh();
         }
 
         public BoundingBox ClippingBox
         {
-            get { return Boundingbox; }
+            get
+            {
+                return new BoundingBox(-100, -100, -100, 100, 100, 100);
+                if (_RMesh == null)
+                {
+                    _RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
+                }
+                return _RMesh?.GetBoundingBox(false) ?? BoundingBox.Empty;
+            }
         }
 
         public override BoundingBox Boundingbox
         {
-            get { return _rmesh.GetBoundingBox(false); }
+            get
+            {
+                return new BoundingBox(-100, -100, -100, 100, 100, 100);
+
+                if (_RMesh == null)
+                {
+                    _RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
+                }
+                return _RMesh?.GetBoundingBox(false) ?? BoundingBox.Empty;
+            }
         }
+
 
         public override string TypeName
         {
@@ -59,7 +86,7 @@ namespace PicoGH
 
         public void DrawViewportMeshes(GH_PreviewMeshArgs args)
         {
-            args.Pipeline.DrawMeshShaded(_rmesh, args.Material);
+            args.Pipeline.DrawMeshShaded(RMesh, args.Material);
         }
 
         public void DrawViewportWires(GH_PreviewWireArgs args)
