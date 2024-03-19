@@ -365,3 +365,4 @@ FodyWeavers.xsd
 *.gh
 *.3dm
 *.3dmbak
+/.editorconfig
