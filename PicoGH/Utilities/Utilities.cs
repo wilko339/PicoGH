@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Leap71.ShapeKernel;
 using PicoGK;
 using Rhino.Geometry;
-using Rhino.Render.ChangeQueue;
 
 namespace PicoGH
 {
