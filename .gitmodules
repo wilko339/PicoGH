@@ -4,3 +4,6 @@
 [submodule "PicoGK"]
 	path = PicoGK
 	url = https://github.com/wilko339/PicoGK.git
+[submodule "LEAP71_LatticeLibrary"]
+	path = LEAP71_LatticeLibrary
+	url = https://github.com/wilko339/LEAP71_LatticeLibrary.git
