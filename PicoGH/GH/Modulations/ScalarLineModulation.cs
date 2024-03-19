@@ -1,4 +1,18 @@
-﻿using System;
+﻿// Copyright 2024 Toby Wilkinson
+//
+//  Licensed under the Apache License, Version 2.0 (the "License")
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0 
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+//  See the License for the specific language governing permissions and 
+//  limitations under the License.
+
+using System;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
@@ -9,8 +23,8 @@ namespace PicoGH.Modulations
 {
     public class ScalarLineModulation : GH_Component
     {
-        static float A;
-        static float B;
+        private static float A;
+        private static float B;
 
         /// <summary>
         /// Initializes a new instance of the ScalarLineModulation class.
@@ -45,7 +59,7 @@ namespace PicoGH.Modulations
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_Number a  = new GH_Number();
+            GH_Number a = new GH_Number();
             if (!DA.GetData(0, ref a)) return;
 
             GH_Number b = new GH_Number();

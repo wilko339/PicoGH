@@ -1,14 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright 2024 Toby Wilkinson
+//
+//  Licensed under the Apache License, Version 2.0 (the "License")
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0 
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+//  See the License for the specific language governing permissions and 
+//  limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
-using Rhino.Geometry;
 using PicoGH.Classes;
 using PicoGK;
-
-using System.Threading.Tasks;
+using Rhino.Geometry;
 
 namespace PicoGH.Primitives
 {
@@ -59,7 +71,7 @@ namespace PicoGH.Primitives
             if (!DA.GetDataList(2, outerRadii)) return;
 
             GH_Integer curveDivisions = new GH_Integer();
-            if (!DA.GetData(3, ref curveDivisions)) return; 
+            if (!DA.GetData(3, ref curveDivisions)) return;
 
             List<double> normalisedCurveParameters = new List<double>();
             List<PicoGHPipe> outputPipes = new List<PicoGHPipe>();

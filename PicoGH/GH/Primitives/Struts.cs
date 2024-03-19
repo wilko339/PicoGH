@@ -1,9 +1,21 @@
-﻿using System;
+﻿// Copyright 2024 Toby Wilkinson
+//
+//  Licensed under the Apache License, Version 2.0 (the "License")
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0 
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+//  See the License for the specific language governing permissions and 
+//  limitations under the License.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using Leap71.ShapeKernel;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -48,7 +60,7 @@ namespace PicoGH.Primitives
             if (!DA.GetDataList(0, beams)) return;
 
             GH_Number radius = new GH_Number();
-            if (!DA.GetData(1,ref radius)) return;
+            if (!DA.GetData(1, ref radius)) return;
 
             Lattice lattice = new Lattice();
 
@@ -68,14 +80,14 @@ namespace PicoGH.Primitives
                 {
                     lattice.AddBeam(
                     new System.Numerics.Vector3(
-                        (float)beam.PointAtStart.X, 
-                        (float)beam.PointAtStart.Y, 
+                        (float)beam.PointAtStart.X,
+                        (float)beam.PointAtStart.Y,
                         (float)beam.PointAtStart.Z),
                     (float)radius.Value,
 
                     new System.Numerics.Vector3(
-                        (float)beam.PointAtEnd.X, 
-                        (float)beam.PointAtEnd.Y, 
+                        (float)beam.PointAtEnd.X,
+                        (float)beam.PointAtEnd.Y,
                         (float)beam.PointAtEnd.Z),
                     (float)radius.Value);
                 }
@@ -97,12 +109,12 @@ namespace PicoGH.Primitives
                         splinePoints.Add(new System.Numerics.Vector3((float)point.X, (float)point.Y, (float)point.Z));
                     }
 
-                    for (int i = 1; i < splinePoints.Count; i++) 
+                    for (int i = 1; i < splinePoints.Count; i++)
                     {
                         lattice.AddBeam(splinePoints[i - 1], (float)radius.Value, splinePoints[i], (float)radius.Value);
                     }
                 }
-                
+
             }
 
             PicoGHVoxels outputVoxels = new PicoGHVoxels(new Voxels(lattice));

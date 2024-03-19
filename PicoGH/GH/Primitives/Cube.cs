@@ -1,15 +1,22 @@
+// Copyright 2024 Toby Wilkinson
+//
+//  Licensed under the Apache License, Version 2.0 (the "License")
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0 
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+//  See the License for the specific language governing permissions and 
+//  limitations under the License.
+
 using System;
 using System.Numerics;
-
-using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using Rhino.Geometry;
-using PicoGK;
 using Leap71.ShapeKernel;
-using System.Diagnostics;
-using Rhino.Geometry.Collections;
-using Rhino.DocObjects;
 using PicoGH.Classes;
 
 namespace PicoGH
@@ -35,7 +42,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("BasePlane", "P", "Base plane", GH_ParamAccess.item, 
+            pManager.AddPlaneParameter("BasePlane", "P", "Base plane", GH_ParamAccess.item,
                 Rhino.Geometry.Plane.WorldXY);
             pManager.AddNumberParameter("EdgeLength", "L", "Edge length", GH_ParamAccess.item, 10.0d);
         }

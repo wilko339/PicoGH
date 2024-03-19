@@ -1,11 +1,23 @@
-﻿using System;
+﻿// Copyright 2024 Toby Wilkinson
+//
+//  Licensed under the Apache License, Version 2.0 (the "License")
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0 
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+//  See the License for the specific language governing permissions and 
+//  limitations under the License.
+
+using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
 using PicoGH.Classes;
-using Rhino.Geometry;
 
 namespace PicoGH.PicoGH.GH.Modulations
 {
@@ -51,9 +63,9 @@ namespace PicoGH.PicoGH.GH.Modulations
             List<GH_Number> parameters = new List<GH_Number>();
             DA.GetDataList(1, parameters);
 
-            LineModulation lineModulation =null;
+            LineModulation lineModulation = null;
 
-            if (parameters.Count == 0) 
+            if (parameters.Count == 0)
             {
                 // The case when only a single mod value is passed in, we return a constant modulation.
                 if (modValues.Count == 1)
@@ -62,7 +74,7 @@ namespace PicoGH.PicoGH.GH.Modulations
                 }
 
                 // Here, we evenly distribute the values across the curve based on the number of parameters provided
-                if (modValues.Count > 1) 
+                if (modValues.Count > 1)
                 {
                     List<float> lengthParameters = new List<float>();
                     List<float> modulationValues = new List<float>();
