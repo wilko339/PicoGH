@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-
+using Grasshopper.Kernel.Types;
 using Grasshopper.Kernel;
-using PicoGK;
-using Rhino.Geometry;
+using Leap71.ShapeKernel;
+using PicoGH.Classes;
 
-namespace PicoGH
+namespace PicoGH.Modulations
 {
-    public class ListUnion : GH_Component
+    public class ConstantLineModulation : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the ListUnion class.
+        /// Initializes a new instance of the ConstantLineModulation class.
         /// </summary>
-        public ListUnion()
-          : base("PicoListUnion", "ListUnion",
-              "Unions a list of voxel objects",
-              "PicoGH", "Operations")
+        public ConstantLineModulation()
+          : base("PicoConstantLineModulation", "ConstLineMod",
+              "Constructs a constant line modulation.",
+              "PicoGH", "Modulations")
         {
         }
 
@@ -24,7 +23,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Input", "I", "Input list of voxel objects to union.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Value", "V", "Constant value", GH_ParamAccess.item, (float)Math.PI);
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Voxels", "V", "Output voxels", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Output Modulation", "M", "Output modulation.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -41,27 +40,13 @@ namespace PicoGH
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<PicoGHVoxels> input = new List<PicoGHVoxels>();
-            if (!DA.GetDataList(0, input)) return;
-           
-            Voxels boolVox = new Voxels();
+            GH_Number input = new GH_Number();
+            if (!DA.GetData(0, ref input)) return; 
 
-            foreach (PicoGHVoxels vox in input)
-            {
-                if (vox.PVoxels is null)
-                {
-                    boolVox.BoolAdd(vox.GenerateVoxels());
-                }
-                else
-                {
-                    boolVox.BoolAdd(vox.PVoxels);
-                }
-            }
-
-            PicoGHVoxels output = new PicoGHVoxels(boolVox);
+            LineModulation lineMod = new LineModulation((float)input.Value);
+            PicoGHModulation output = new PicoGHModulation(lineMod);
 
             DA.SetData(0, output);
-
         }
 
         /// <summary>
@@ -82,7 +67,7 @@ namespace PicoGH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("5A35211D-AC04-4816-97A1-249B34B00D0B"); }
+            get { return new Guid("EFA31BA1-0752-47F0-A86D-7B41247A8C09"); }
         }
     }
 }

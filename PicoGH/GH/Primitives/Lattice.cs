@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-using Rhino.Geometry;
+using Grasshopper.Kernel.Types;
+using PicoGH.Classes;
 
-namespace PicoGH.PicoGH.IO
+namespace PicoGH.PicoGH.Primitives
 {
-    public class Voxels2Mesh : GH_Component
+    public class Lattice : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the Voxels2Mesh class.
+        /// Initializes a new instance of the Lattice class.
         /// </summary>
-        public Voxels2Mesh()
-          : base("PicoVoxels2Mesh", "Voxels2Mesh",
-              "Converts the voxel object to a _rmesh.",
-              "PicoGH", "IO")
+        public Lattice()
+          : base("Lattice", "Lattice",
+              "Creates a lattice",
+              "PicoGH", "Lattice")
         {
         }
 
@@ -23,7 +23,8 @@ namespace PicoGH.PicoGH.IO
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("InputVoxels", "V", "Input voxel object.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("CellArray", "C", "Cell array", GH_ParamAccess.item);
+            pManager.AddGenericParameter("BeamRadius", "R", "Beam radius", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace PicoGH.PicoGH.IO
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddMeshParameter("Output Mesh", "M", "Output _rmesh.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Voxels", "V", "Output voxels", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -40,11 +41,15 @@ namespace PicoGH.PicoGH.IO
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            PicoGHVoxels inputVoxels = new PicoGHVoxels();
-            if (!DA.GetData(0, ref inputVoxels)) return;
+            PicoGHConformalCellArray conformalArray = new PicoGHConformalCellArray();
+            if (!DA.GetData("CellArray", ref conformalArray)) return;
 
-            DA.SetData(0, Utilities.PicoMeshToRhinoMesh(inputVoxels.GeneratePMesh()));
+            GH_Number beamRadius = new GH_Number();
+            if(!DA.GetData("BeamRadius", ref beamRadius)) return;
 
+            PicoGHLattice lattice = new PicoGHLattice(conformalArray._CellArray, (float)beamRadius.Value);
+
+            DA.SetData(0, lattice);
         }
 
         /// <summary>
@@ -65,7 +70,7 @@ namespace PicoGH.PicoGH.IO
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("4AB4BC6C-0162-41E9-A91D-87C406DCA150"); }
+            get { return new Guid("1E7E1B1E-B8E5-49BD-9BD0-BB9E262710AC"); }
         }
     }
 }

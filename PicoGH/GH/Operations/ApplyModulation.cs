@@ -1,20 +1,19 @@
 ﻿using System;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
-using Leap71.ShapeKernel;
-using PicoGH.Types;
+using PicoGH.Interfaces;
+using PicoGH.Classes;
 
-namespace PicoGH.PicoGH.Modulations
+namespace PicoGH.Operations
 {
-    public class ConstantSurfaceModulation : GH_Component
+    public class ApplyModulation : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the ConstantSurfaceModulation class.
+        /// Initializes a new instance of the ModulatePipe class.
         /// </summary>
-        public ConstantSurfaceModulation()
-          : base("PicoConstantSurfaceModulation", "ConstSurfMod",
-              "Constructs a constant surface (2D) modulation.",
+        public ApplyModulation()
+          : base("PicoApplyModulation", "ApplyMod",
+              "Applies surface modulations to change the inner and outer radii of a compatible object.",
               "PicoGH", "Modulations")
         {
         }
@@ -24,7 +23,10 @@ namespace PicoGH.PicoGH.Modulations
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Value", "V", "Constant value", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "Input shape to apply modulations.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("InnerMod", "I", "Modulation to apply to the inner radius.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("OuterMod", "I", "Modulation to apply to the outer radius.", GH_ParamAccess.item);
+
         }
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace PicoGH.PicoGH.Modulations
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Output Modulation", "M", "Output modulation.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("OutputVoxels", "V", "Output voxels.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -41,11 +43,21 @@ namespace PicoGH.PicoGH.Modulations
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_Number input = new GH_Number();
-            if (!DA.GetData(0, ref input)) return;
+            IModulate inputData = null;
+            if (!DA.GetData(0, ref inputData)) return;
 
-            SurfaceModulation surfMod = new SurfaceModulation((float)input.Value);
-            PicoGHModulation output = new PicoGHModulation(surfMod);
+            if (!(inputData is IModulate)) return;
+
+            PicoGHModulation modulation1 = null;
+            PicoGHModulation modulation2 = null;
+
+            if (!DA.GetData(1, ref modulation1)) return;
+            if (!DA.GetData(2, ref modulation2)) return;
+
+            IModulate output = inputData.DeepCopy() as IModulate;
+
+            // Need to look at setting the mesh steps when we apply modulations...
+            output.SetModulation(modulation1, modulation2);
 
             DA.SetData(0, output);
         }
@@ -68,7 +80,7 @@ namespace PicoGH.PicoGH.Modulations
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("7A1C9C0B-7D4C-4B50-AB63-AC68D66B6A2F"); }
+            get { return new Guid("58BC858D-CAD3-44C9-B43D-A2CABFB47EAF"); }
         }
     }
 }

@@ -11,51 +11,40 @@ namespace PicoGH
     {
         public PicoGK.Mesh PMesh;
         public PicoGK.Voxels PVoxels;
-
-        private Rhino.Geometry.Mesh _RMesh;
-
-        public Rhino.Geometry.Mesh RMesh
-        {  get
-            {
-                if (_RMesh == null)
-                {
-                    _RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
-                }
-                return _RMesh;
-            }
-           set
-            {
-                _RMesh = value;
-            }
-        }
+        public Rhino.Geometry.Mesh RMesh;
 
         public PicoGHVoxels() { }
         public PicoGHVoxels(PicoGK.Voxels voxels)
         {
             PVoxels = voxels;
+            PMesh = GeneratePMesh();
+            RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
         }
 
         public virtual Voxels GenerateVoxels()
         {
-            throw new NotImplementedException("Child must override this method.");
+            if (PVoxels == null)
+            {
+                throw new NotImplementedException("Child must override this method.");
+            }
+            return PVoxels;
         }
 
         public virtual PicoGK.Mesh GeneratePMesh()
         {
             // This is usually overridden by a child class, but sometimes we only have the voxel field (such as converting a mesh to voxels).
-            return PVoxels.mshAsMesh();
+            if (PMesh == null)
+            {
+                return PVoxels.mshAsMesh();
+            }
+            return PMesh;
         }
 
         public BoundingBox ClippingBox
         {
             get
             {
-                return new BoundingBox(-100, -100, -100, 100, 100, 100);
-                if (_RMesh == null)
-                {
-                    _RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
-                }
-                return _RMesh?.GetBoundingBox(false) ?? BoundingBox.Empty;
+                return RMesh.GetBoundingBox(false);
             }
         }
 
@@ -63,16 +52,9 @@ namespace PicoGH
         {
             get
             {
-                return new BoundingBox(-100, -100, -100, 100, 100, 100);
-
-                if (_RMesh == null)
-                {
-                    _RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
-                }
-                return _RMesh?.GetBoundingBox(false) ?? BoundingBox.Empty;
+                return RMesh.GetBoundingBox(false);
             }
         }
-
 
         public override string TypeName
         {
@@ -91,12 +73,13 @@ namespace PicoGH
 
         public void DrawViewportWires(GH_PreviewWireArgs args)
         {
-            
+            // Uncomment to draw mesh edges for previews
+            //args.Pipeline.DrawMeshWires(RMesh, args.Color);
         }
 
         public override IGH_GeometricGoo DuplicateGeometry()
         {
-            throw new NotImplementedException();
+            return new PicoGHVoxels(GenerateVoxels());
         }
 
         public override BoundingBox GetBoundingBox(Transform xform)
@@ -116,7 +99,11 @@ namespace PicoGH
 
         public override IGH_GeometricGoo Transform(Transform xform)
         {
-            throw new NotImplementedException();
+            RMesh.Transform(xform);
+            PMesh = Utilities.RhinoMeshToPicoMesh(RMesh);
+            PVoxels = new Voxels(PMesh);
+
+            return new PicoGHVoxels(PVoxels);
         }
     }
 }

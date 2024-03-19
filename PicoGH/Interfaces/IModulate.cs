@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PicoGH.Types;
+﻿using System.Numerics;
+using PicoGH.Classes;
 
 namespace PicoGH.Interfaces
 {
     public interface IModulate
     {
-        PicoGHVoxels SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2);
+        void SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2);
+        
+        // This exists cause we dont wanna keep modifying the original object when we apply modulations.
+        // In reality we actually do, but for expected behaviour in grasshopper, we don't...
+        PicoGHVoxels DeepCopy();
+        Vector3 PointAtParameter(float p);
     }
 }

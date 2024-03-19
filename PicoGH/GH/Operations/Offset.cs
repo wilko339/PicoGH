@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Numerics;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Types;
 using PicoGK;
 using Rhino.Geometry;
 
-namespace PicoGH.PicoGH.IO
+namespace PicoGH.PicoGH.GH.Operations
 {
-    public class Mesh2Voxels : GH_Component
+    public class Offset : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the Mesh2Voxels class.
+        /// Initializes a new instance of the Offset class.
         /// </summary>
-        public Mesh2Voxels()
-          : base("PicoMesh2Voxels", "Mesh2Voxels",
-              "Converts an input triangle _rmesh to a voxel representation",
-              "PicoGH", "IO")
+        public Offset()
+          : base("PicoOffset", "Offset",
+              "Offsets a voxel object by the given amount.",
+              "PicoGH", "Operations")
         {
         }
 
@@ -25,7 +25,8 @@ namespace PicoGH.PicoGH.IO
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddMeshParameter("Mesh", "M", "Input _rmesh to convert", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Input", "I", "Input voxels.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Offset", "O", "Offset distance", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -42,26 +43,16 @@ namespace PicoGH.PicoGH.IO
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Rhino.Geometry.Mesh inputMesh = new Rhino.Geometry.Mesh();
-            if (!DA.GetData(0, ref inputMesh)) { return; }
+            PicoGHVoxels inputVoxels = new PicoGHVoxels();
+            if (!DA.GetData(0, ref inputVoxels)) return;
 
-            PicoGK.Mesh pMesh = new PicoGK.Mesh();
+            GH_Number offset = new GH_Number();
+            if (!DA.GetData(1, ref offset)) return;
 
-            foreach (var vertex in  inputMesh.Vertices)
-            {
-                pMesh.nAddVertex(new Vector3((float)vertex.X, (float)vertex.Y, (float)vertex.Z));
-            }
+            Voxels outputVoxels = new Voxels(inputVoxels.PVoxels);
+            outputVoxels.Offset((float)offset.Value);
 
-            foreach (var meshFace in inputMesh.Faces)
-            {
-                Triangle triangle = new Triangle(meshFace.A, meshFace.B, meshFace.C);
-                pMesh.nAddTriangle(triangle);
-            }
-
-            Voxels voxels = new Voxels(pMesh);
-
-            var output = new PicoGHVoxels(voxels);
-            DA.SetData(0, output);
+            DA.SetData(0, new PicoGHVoxels(outputVoxels));
         }
 
         /// <summary>
@@ -82,7 +73,7 @@ namespace PicoGH.PicoGH.IO
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("F0F9388A-64FF-4822-82E5-D72C898739C2"); }
+            get { return new Guid("6E84586E-E4B6-4985-8BF5-20CDBA796E69"); }
         }
     }
 }

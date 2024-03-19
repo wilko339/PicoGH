@@ -1,20 +1,21 @@
 ﻿using System;
-using Grasshopper.Kernel.Types;
-using Grasshopper.Kernel;
-using Leap71.ShapeKernel;
-using PicoGH.Types;
+using System.Collections.Generic;
 
-namespace PicoGH
+using Grasshopper.Kernel;
+using PicoGK;
+using Rhino.Geometry;
+
+namespace PicoGH.PicoGH.IO
 {
-    public class ConstantLineModulation : GH_Component
+    public class Voxels2Mesh : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the ConstantLineModulation class.
+        /// Initializes a new instance of the Voxels2Mesh class.
         /// </summary>
-        public ConstantLineModulation()
-          : base("PicoConstantLineModulation", "ConstLineMod",
-              "Constructs a constant line modulation.",
-              "PicoGH", "Modulations")
+        public Voxels2Mesh()
+          : base("PicoVoxels2Mesh", "Voxels2Mesh",
+              "Converts the voxel object to a _rmesh.",
+              "PicoGH", "IO")
         {
         }
 
@@ -23,7 +24,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Value", "V", "Constant value", GH_ParamAccess.item, (float)Math.PI);
+            pManager.AddGenericParameter("InputVoxels", "V", "Input voxel object.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Output Modulation", "M", "Output modulation.", GH_ParamAccess.item);
+            pManager.AddMeshParameter("Output Mesh", "M", "Output _rmesh.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -40,13 +41,24 @@ namespace PicoGH
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_Number input = new GH_Number();
-            if (!DA.GetData(0, ref input)) return; 
+            PicoGHVoxels inputVoxels = new PicoGHVoxels();
+            if (!DA.GetData(0, ref inputVoxels)) return;
 
-            LineModulation lineMod = new LineModulation((float)input.Value);
-            PicoGHModulation output = new PicoGHModulation(lineMod);
+            PicoGK.Mesh pMesh = inputVoxels.GeneratePMesh();
+            Rhino.Geometry.Mesh rMesh = Utilities.PicoMeshToRhinoMesh(pMesh);
 
-            DA.SetData(0, output);
+            if (!rMesh.IsValid)
+            {
+                PicoGK.Mesh tempMesh = new PicoGK.Mesh(inputVoxels.GenerateVoxels());
+                rMesh = Utilities.PicoMeshToRhinoMesh(tempMesh);
+            }
+
+            if (!rMesh.IsValid)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Output mesh is invalid.");
+            }
+
+            DA.SetData(0, rMesh);
         }
 
         /// <summary>
@@ -67,7 +79,7 @@ namespace PicoGH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("EFA31BA1-0752-47F0-A86D-7B41247A8C09"); }
+            get { return new Guid("4AB4BC6C-0162-41E9-A91D-87C406DCA150"); }
         }
     }
 }

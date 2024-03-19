@@ -3,24 +3,19 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
-using PicoGH.Types;
+using PicoGH.Classes;
 
-namespace PicoGH
+namespace PicoGH.PicoGH.Modulations
 {
-    public class CosModulation : GH_Component
+    public class ConstantSurfaceModulation : GH_Component
     {
-
-        public float A = 0;
-        public float B = 0;
-        public float C = 0;
-
         /// <summary>
-        /// Initializes a new instance of the CosModulation class.
+        /// Initializes a new instance of the ConstantSurfaceModulation class.
         /// </summary>
-        public CosModulation()
-            : base("PicoCosineModulation", "CosMod",
-                "Constructs a 1D cosine modulation.",
-                "PicoGH", "Modulations")
+        public ConstantSurfaceModulation()
+          : base("PicoConstantSurfaceModulation", "ConstSurfMod",
+              "Constructs a constant surface (2D) modulation.",
+              "PicoGH", "Modulations")
         {
         }
 
@@ -29,9 +24,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("AdditionTerm", "A", "Term A in y = A + B * Cos(C)", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Mult", "B", "Term B in A + B * Cos(C)", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Arg", "C", "Term C in A + B * Cos(C)", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Value", "V", "Constant value", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -48,27 +41,13 @@ namespace PicoGH
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_Number _a = new GH_Number();
-            GH_Number _b = new GH_Number();
-            GH_Number _c = new GH_Number();
+            GH_Number input = new GH_Number();
+            if (!DA.GetData(0, ref input)) return;
 
-            if (!DA.GetData(0, ref _a)) return;
-            if (!DA.GetData(1, ref _b)) return;
-            if (!DA.GetData(2, ref _c)) return;
+            SurfaceModulation surfMod = new SurfaceModulation((float)input.Value);
+            PicoGHModulation output = new PicoGHModulation(surfMod);
 
-            A = (float)_a.Value;
-            B = (float)_b.Value;
-            C = (float)_c.Value;
-
-            LineModulation lineMod = new LineModulation(CosFunction);
-            PicoGHModulation modulation = new PicoGHModulation(lineMod);
-
-            DA.SetData(0, modulation);
-        }
-
-        protected float CosFunction(float fPhi)
-        {
-            return A + B * (float)Math.Cos((double)C * (double)fPhi);
+            DA.SetData(0, output);
         }
 
         /// <summary>
@@ -89,7 +68,7 @@ namespace PicoGH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("675FA626-0A6C-4DDB-B17F-75C75BE15656"); }
+            get { return new Guid("7A1C9C0B-7D4C-4B50-AB63-AC68D66B6A2F"); }
         }
     }
 }

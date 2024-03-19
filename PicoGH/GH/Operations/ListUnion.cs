@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Numerics;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
-using Leap71.ShapeKernel;
-using Rhino.Geometry;
-using PicoGH.PicoGH.Classes;
+using PicoGK;
 
-namespace PicoGH.Primitives
+namespace PicoGH
 {
-    public class Pipe : GH_Component
+    public class ListUnion : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the Pipe class.
+        /// Initializes a new instance of the ListUnion class.
         /// </summary>
-        public Pipe()
-          : base("PicoPipe", "Pipe",
-              "A pipe.",
-              "PicoGH", "Primitives")
+        public ListUnion()
+          : base("PicoListUnion", "ListUnion",
+              "Unions a list of voxel objects",
+              "PicoGH", "Operations")
         {
         }
 
@@ -27,9 +23,7 @@ namespace PicoGH.Primitives
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("Frames", "F", "Frames", GH_ParamAccess.list);
-            pManager.AddNumberParameter("InnerRadius", "I", "Inner radius.", GH_ParamAccess.item);
-            pManager.AddNumberParameter("OuterRadius", "O", "Outer radius.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Input", "I", "Input list of voxel objects to union.", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -46,22 +40,34 @@ namespace PicoGH.Primitives
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Rhino.Geometry.Plane> frames = new List<Rhino.Geometry.Plane>();
-            if (!DA.GetDataList(0, frames)) return;
+            List<PicoGHVoxels> input = new List<PicoGHVoxels>();
+            if (!DA.GetDataList(0, input)) return;
+           
+            Voxels boolVox = new Voxels();
 
-            GH_Number innerRadius = new GH_Number();
-            if (!DA.GetData(1, ref innerRadius)) return;
+            foreach (PicoGHVoxels vox in input)
+            {
+                if (vox.PVoxels is null)
+                {
+                    Voxels voxels = vox.GenerateVoxels();
+                    lock (boolVox)
+                    {
+                        boolVox.BoolAdd(vox.GenerateVoxels());
+                    }
+                }
+                else
+                {
+                    lock (boolVox)
+                    {
+                        boolVox.BoolAdd(vox.PVoxels);
+                    }
+                }
+            }
 
-            GH_Number outerRadius = new GH_Number();
-            if (!DA.GetData(2, ref outerRadius)) return;
-            
-            Frames localFrames = Utilities.RhinoPlanesToPicoFrames(frames);
-
-            BasePipe pipe = new BasePipe(localFrames, (float)innerRadius.Value, (float)outerRadius.Value);
-
-            PicoGHPipe output = new PicoGHPipe(pipe);
+            PicoGHVoxels output = new PicoGHVoxels(boolVox);
 
             DA.SetData(0, output);
+
         }
 
         /// <summary>
@@ -82,7 +88,7 @@ namespace PicoGH.Primitives
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("53D17CD4-EBB5-4D8A-BEEC-4DB083BE3712"); }
+            get { return new Guid("5A35211D-AC04-4816-97A1-249B34B00D0B"); }
         }
     }
 }

@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Numerics;
+using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
 using PicoGK;
 using Rhino.Geometry;
 
-namespace PicoGH
+namespace PicoGH.PicoGH.IO
 {
-    public class PicoGHConfig : GH_Component
+    public class Mesh2Voxels : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the PicoGHConfig class.
+        /// Initializes a new instance of the Mesh2Voxels class.
         /// </summary>
-        public PicoGHConfig()
-          : base("PicoGHConfig", "Config",
-              "Sets some options for PicoGK",
-              "PicoGH", "Config")
+        public Mesh2Voxels()
+          : base("PicoMesh2Voxels", "Mesh2Voxels",
+              "Converts an input triangle _rmesh to a voxel representation",
+              "PicoGH", "IO")
         {
         }
 
@@ -24,7 +25,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("VoxelSize", "V", "Sets the global voxel size for PicoGK.", GH_ParamAccess.item);
+            pManager.AddMeshParameter("Mesh", "M", "Input _rmesh to convert", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("Voxels", "V", "Output voxels", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -40,10 +42,15 @@ namespace PicoGH
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            GH_Number voxelSize = new GH_Number();
-            if (!DA.GetData(0, ref voxelSize)) return;
+            Rhino.Geometry.Mesh inputMesh = new Rhino.Geometry.Mesh();
+            if (!DA.GetData(0, ref inputMesh)) return;
 
-            Library.SetVoxelSize((float)voxelSize.Value);
+            PicoGK.Mesh pMesh = Utilities.RhinoMeshToPicoMesh(inputMesh);
+
+            Voxels voxels = new Voxels(pMesh);
+
+            var output = new PicoGHVoxels(voxels);
+            DA.SetData(0, output);
         }
 
         /// <summary>
@@ -64,7 +71,7 @@ namespace PicoGH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("5EF191F8-14D0-48C3-B30E-CB526D858EA1"); }
+            get { return new Guid("F0F9388A-64FF-4822-82E5-D72C898739C2"); }
         }
     }
 }

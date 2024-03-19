@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Leap71.ShapeKernel;
-using PicoGH.Types;
+using PicoGH.Classes;
 using PicoGH.Classes;
 
 namespace PicoGH.Primitives
@@ -69,8 +69,8 @@ namespace PicoGH.Primitives
             BaseBox box  = new BaseBox(localFrames);
             box.SetWidth(wMod._lModulation);
             box.SetDepth(hMod._lModulation);
-            box.SetDepthSteps(100);
-            box.SetWidthSteps(100);
+            box.SetDepthSteps(10);
+            box.SetWidthSteps(10);
             box.SetLengthSteps(100);
 
             PicoGHBox output = new PicoGHBox(box);

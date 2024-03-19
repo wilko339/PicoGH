@@ -43,6 +43,32 @@ namespace PicoGH
             return mesh;
         }
 
+        public static PicoGK.Mesh RhinoMeshToPicoMesh(Rhino.Geometry.Mesh inputMesh) 
+        {
+            PicoGK.Mesh pMesh = new PicoGK.Mesh();
+
+            foreach (var vertex in inputMesh.Vertices)
+            {
+                pMesh.nAddVertex(new Vector3((float)vertex.X, (float)vertex.Y, (float)vertex.Z));
+            }
+
+            foreach (var meshFace in inputMesh.Faces)
+            {
+                // If we find a quad face, this needs to be triangulated to work with PicoGK
+                if (meshFace.IsQuad)
+                {
+                    pMesh.nAddTriangle(new Triangle(meshFace.A, meshFace.B, meshFace.C));
+                    pMesh.nAddTriangle(new Triangle(meshFace.A, meshFace.C, meshFace.D));
+                }
+                else
+                {
+                    pMesh.nAddTriangle(new Triangle(meshFace.A, meshFace.B, meshFace.C));
+                }
+            }
+
+            return pMesh;
+        }
+
         public static Frames RhinoPlanesToPicoFrames(List<Rhino.Geometry.Plane> planes)
         {
             List<Vector3> aPoints = new List<Vector3>();
@@ -53,7 +79,7 @@ namespace PicoGH
                 aPoints.Add(new Vector3((float)frame.OriginX, (float)frame.OriginY, (float)frame.OriginZ));
             }
 
-            Frames localFrames = new Frames(aPoints, Frames.EFrameType.SPHERICAL);
+            Frames localFrames = new Frames(aPoints, Frames.EFrameType.MIN_ROTATION);
 
             return localFrames;
         }

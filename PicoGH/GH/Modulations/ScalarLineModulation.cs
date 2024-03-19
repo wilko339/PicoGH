@@ -3,14 +3,14 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
-using PicoGH.Types;
+using PicoGH.Classes;
 
-namespace PicoGH.PicoGH.Modulations
+namespace PicoGH.Modulations
 {
     public class ScalarLineModulation : GH_Component
     {
-        float A = 0;
-        float B = 0;
+        static float A;
+        static float B;
 
         /// <summary>
         /// Initializes a new instance of the ScalarLineModulation class.
@@ -27,8 +27,8 @@ namespace PicoGH.PicoGH.Modulations
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("A", "A", "Term A in A + Bx.", GH_ParamAccess.item, 0);
-            pManager.AddNumberParameter("B", "B", "Term B in A + Bx.", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("A", "A", "Term A in A + Bx.", GH_ParamAccess.item, 0f);
+            pManager.AddNumberParameter("B", "B", "Term B in A + Bx.", GH_ParamAccess.item, 1f);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace PicoGH.PicoGH.Modulations
             DA.SetData(0, modulation);
         }
 
-        protected float ScalarFunction(float x)
+        protected static float ScalarFunction(float x)
         {
             return A + B * x;
         }

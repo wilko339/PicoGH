@@ -2,7 +2,7 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
-using PicoGH.Types;
+using PicoGH.Classes;
 
 namespace PicoGH.Modulations
 {

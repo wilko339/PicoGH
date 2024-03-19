@@ -1,20 +1,23 @@
 ﻿using System;
 
 using Grasshopper.Kernel;
-using PicoGH.Interfaces;
-using PicoGH.Types;
+using Grasshopper.Kernel.Types;
+using PicoGK;
+using Rhino.Geometry;
 
-namespace PicoGH.Operations
+namespace PicoGH.Config
 {
-    public class ModulatePipe : GH_Component
+    public class PicoGHConfig : GH_Component
     {
+        float _VoxelSize = 0.5f;
+
         /// <summary>
-        /// Initializes a new instance of the ModulatePipe class.
+        /// Initializes a new instance of the PicoGHConfig class.
         /// </summary>
-        public ModulatePipe()
-          : base("PicoApplyModulation", "ApplyMod",
-              "Applies surface modulations to change the inner and outer radii of a compatible object.",
-              "PicoGH", "Modulations")
+        public PicoGHConfig()
+          : base("PicoGHConfig", "Config",
+              "Sets some options for PicoGK",
+              "PicoGH", "Config")
         {
         }
 
@@ -23,10 +26,7 @@ namespace PicoGH.Operations
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "Input shape to apply modulations.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("InnerMod", "I", "Modulation to apply to the inner radius.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("OuterMod", "I", "Modulation to apply to the outer radius.", GH_ParamAccess.item);
-
+            pManager.AddNumberParameter("VoxelSize", "V", "Sets the global voxel size for PicoGK.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -34,7 +34,6 @@ namespace PicoGH.Operations
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("OutputVoxels", "V", "Output voxels.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -43,20 +42,10 @@ namespace PicoGH.Operations
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            IModulate inputData = null;
-            if (!DA.GetData(0, ref inputData)) return;
+            GH_Number voxelSize = new GH_Number();
+            if (!DA.GetData(0, ref voxelSize)) return;
 
-            if (!(inputData is IModulate)) return;
-
-            PicoGHModulation modulation1 = null;
-            PicoGHModulation modulation2 = null;
-
-            if (!DA.GetData(1, ref modulation1)) return;
-            if (!DA.GetData(2, ref modulation2)) return;
-
-            PicoGHVoxels output = inputData.SetModulation(modulation1, modulation2);
-
-            DA.SetData(0, output);
+            Library.SetVoxelSize((float)voxelSize.Value);
         }
 
         /// <summary>
@@ -77,7 +66,7 @@ namespace PicoGH.Operations
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("58BC858D-CAD3-44C9-B43D-A2CABFB47EAF"); }
+            get { return new Guid("5EF191F8-14D0-48C3-B30E-CB526D858EA1"); }
         }
     }
 }
