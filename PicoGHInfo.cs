@@ -31,7 +31,7 @@ namespace PicoGH
         public override Guid Id => new Guid("e7ba07d8-402e-4f2e-8389-d0248838eb46");
 
         //Return a string identifying you or your company.
-        public override string AuthorName => "";
+        public override string AuthorName => "Toby Wilkinson";
 
         //Return a string representing your preferred contact details.
         public override string AuthorContact => "";
