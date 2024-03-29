@@ -97,20 +97,26 @@ namespace PicoGH
             }
 
             Frames picoFrames = Utilities.RhinoPlanesToPicoFrames(curveFrames);
-            BasePipeSegment pipe = new BasePipeSegment(picoFrames, (float)innerRadius.Value, (float)outerRadius.Value, sMod._lModulation, rMod._lModulation, BasePipeSegment.EMethod.MID_RANGE);
+            BasePipeSegment pipe = new BasePipeSegment(
+                picoFrames, 
+                (float)innerRadius.Value, 
+                (float)outerRadius.Value, 
+                sMod._lModulation, 
+                rMod._lModulation, 
+                BasePipeSegment.EMethod.MID_RANGE);
 
             // Here we make sure the construction / preview mesh isn't too overkill
             double curveLength = curve.Value.GetLength();
 
             uint lengthSteps = 2;
 
-            if (curve.Value.Degree > 1) lengthSteps = (uint)Math.Ceiling(curveLength / Library.fVoxelSizeMM) / 2;
+            if (curve.Value.Degree > 1) lengthSteps = (uint)Math.Ceiling(curveLength / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
 
             uint radialSteps = (uint)Math.Ceiling(
-                (outerRadius.Value - innerRadius.Value) / Library.fVoxelSizeMM) / 2;
+                (outerRadius.Value - innerRadius.Value) / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
 
             double circumference = 2 * Math.PI * outerRadius.Value;
-            uint polarSteps = (uint)(Math.Ceiling(circumference / Library.fVoxelSizeMM));
+            uint polarSteps = (uint)Math.Ceiling(circumference / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
 
             PicoGHPipeSegment outputPipe = new PicoGHPipeSegment(pipe, lengthSteps, radialSteps, polarSteps);
 
