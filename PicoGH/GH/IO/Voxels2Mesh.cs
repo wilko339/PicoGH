@@ -58,11 +58,11 @@ namespace PicoGH.PicoGH.IO
             PicoGK.Mesh pMesh = inputVoxels.GeneratePMesh();
             Rhino.Geometry.Mesh rMesh = Utilities.PicoMeshToRhinoMesh(pMesh);
 
-            if (!rMesh.IsValid)
-            {
-                PicoGK.Mesh tempMesh = new PicoGK.Mesh(inputVoxels.GenerateVoxels());
-                rMesh = Utilities.PicoMeshToRhinoMesh(tempMesh);
-            }
+            //if (!rMesh.IsValid)
+            //{
+            //    PicoGK.Mesh tempMesh = new PicoGK.Mesh(inputVoxels.GenerateVoxels());
+            //    rMesh = Utilities.PicoMeshToRhinoMesh(tempMesh);
+            //}
 
             if (!rMesh.IsValid)
             {
