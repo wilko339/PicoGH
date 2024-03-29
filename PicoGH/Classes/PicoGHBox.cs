@@ -16,12 +16,11 @@ using System.Numerics;
 using Leap71.LatticeLibrary;
 using Leap71.ShapeKernel;
 using PicoGH.Interfaces;
-using PicoGH.Interfaces;
 using PicoGK;
 
 namespace PicoGH.Classes
 {
-    public class PicoGHBox : PicoGHVoxels, IModulate, IConformalArray
+    public class PicoGHBox : PicoGHVoxels, IModulate<PicoGHBox>, IConformalArray
     {
         public BaseBox _BaseBox;
         public PicoGHBox(BaseBox baseBox)
@@ -59,11 +58,6 @@ namespace PicoGH.Classes
             return _BaseBox.m_aFrames.vecGetSpineAlongLength(p);
         }
 
-        public PicoGHVoxels DeepCopy()
-        {
-            return new PicoGHBox(_BaseBox);
-        }
-
         public override Mesh GeneratePMesh()
         {
             return _BaseBox.mshConstruct();
@@ -77,6 +71,16 @@ namespace PicoGH.Classes
         ConformalCellArray IConformalArray.GenerateConformalArray(uint nx, uint ny, uint nz)
         {
             return new ConformalCellArray(_BaseBox, (uint)nx, (uint)ny, (uint)nz);
+        }
+
+        public PicoGHBox DeepCopy()
+        {
+            PicoGHBox clone = (PicoGHBox)MemberwiseClone();
+
+            // Reference types
+            clone._BaseBox = _BaseBox.DeepClone();
+
+            return clone;
         }
     }
 }

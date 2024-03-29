@@ -20,7 +20,7 @@ using PicoGK;
 
 namespace PicoGH.Classes
 {
-    public class PicoGHPipe : PicoGHVoxels, IModulate, IConformalArray
+    public class PicoGHPipe : PicoGHVoxels, IModulate<PicoGHPipe>, IConformalArray
     {
         private BasePipe _BasePipe;
         private uint _LengthDivisions = 10;
@@ -69,29 +69,11 @@ namespace PicoGH.Classes
                 outerMod = modulation2._sModulation;
             }
 
-            uint lengthDivisions = 1;
-
-            if (!(modulation1._lModulation.m_aDiscreteLengthRatios is null))
-            {
-                lengthDivisions = (uint)modulation1._lModulation.m_aDiscreteLengthRatios.Count;
-            }
-
-            if (!(modulation2._lModulation.m_aDiscreteLengthRatios is null))
-            {
-                lengthDivisions = (uint)modulation2._lModulation.m_aDiscreteLengthRatios.Count;
-            }
-
-            _LengthDivisions = lengthDivisions;
-            _BasePipe.SetRadius(innerMod, outerMod, lengthDivisions);
+            _BasePipe.SetRadius(innerMod, outerMod);
 
             RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
 
             //return output;
-        }
-
-        public PicoGHVoxels DeepCopy()
-        {
-            return new PicoGHPipe(_BasePipe);
         }
 
         public override Mesh GeneratePMesh()
@@ -110,6 +92,16 @@ namespace PicoGH.Classes
         public ConformalCellArray GenerateConformalArray(uint nx, uint ny, uint nz)
         {
             return new ConformalCellArray(_BasePipe, nx, ny, nz);
+        }
+
+        public PicoGHPipe DeepCopy()
+        {
+            PicoGHPipe clone = (PicoGHPipe)this.MemberwiseClone();
+
+            // Reference types
+            clone._BasePipe = _BasePipe.DeepClone();
+
+            return clone;
         }
     }
 }
