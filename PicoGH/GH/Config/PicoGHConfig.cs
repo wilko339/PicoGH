@@ -22,7 +22,11 @@ namespace PicoGH.Config
 {
     public class PicoGHConfig : GH_Component
     {
+        // Set the global voxel size
         private float _VoxelSize = 0.5f;
+
+        // Set a coarsening factor for the intermediate ShapeKernel meshes
+        public int _meshCoarseFactor = 4;
 
         /// <summary>
         /// Initializes a new instance of the PicoGHConfig class.
@@ -39,7 +43,8 @@ namespace PicoGH.Config
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("VoxelSize", "V", "Sets the global voxel size for PicoGK.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("VoxelSize", "V", "Sets the global voxel size for PicoGK. Set higher for faster generation, lower for better resolution.", GH_ParamAccess.item, 0.5);
+            pManager.AddNumberParameter("MeshCoarsen", "M", "A coarsening factor for the intermediate meshes. Higher is more coarse (faster).", GH_ParamAccess.item, 4);
         }
 
         /// <summary>
@@ -58,7 +63,11 @@ namespace PicoGH.Config
             GH_Number voxelSize = new GH_Number();
             if (!DA.GetData(0, ref voxelSize)) return;
 
+            GH_Integer meshCoarseningFactor = new GH_Integer();
+            if (!DA.GetData(1, ref  meshCoarseningFactor)) return;
+
             Library.SetVoxelSize((float)voxelSize.Value);
+            Library.SetMeshCoarseningFactor((uint)meshCoarseningFactor.Value);
         }
 
         /// <summary>
