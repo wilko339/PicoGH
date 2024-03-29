@@ -64,17 +64,11 @@ namespace PicoGH
                 if (vox.PVoxels is null)
                 {
                     Voxels voxels = vox.GenerateVoxels();
-                    lock (boolVox)
-                    {
-                        boolVox.BoolAdd(vox.GenerateVoxels());
-                    }
+                    boolVox.BoolAdd(vox.GenerateVoxels());
                 }
                 else
                 {
-                    lock (boolVox)
-                    {
-                        boolVox.BoolAdd(vox.PVoxels);
-                    }
+                    boolVox.BoolAdd(vox.PVoxels);
                 }
             }
 
