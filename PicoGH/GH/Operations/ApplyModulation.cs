@@ -56,10 +56,10 @@ namespace PicoGH.Operations
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            IModulate inputData = null;
+            object inputData = null;
             if (!DA.GetData(0, ref inputData)) return;
 
-            if (!(inputData is IModulate)) return;
+            // if (!(inputData is IModulate)) return;
 
             PicoGHModulation modulation1 = null;
             PicoGHModulation modulation2 = null;
@@ -67,12 +67,24 @@ namespace PicoGH.Operations
             if (!DA.GetData(1, ref modulation1)) return;
             if (!DA.GetData(2, ref modulation2)) return;
 
-            IModulate output = inputData.DeepCopy() as IModulate;
-
-            // Need to look at setting the mesh steps when we apply modulations...
-            output.SetModulation(modulation1, modulation2);
-
-            DA.SetData(0, output);
+            if (inputData is IModulate<PicoGHPipeSegment> pipeSegment)
+            {
+                PicoGHPipeSegment output = pipeSegment.DeepCopy();
+                output.SetModulation(modulation1, modulation2);
+                DA.SetData(0, output);
+            }
+            else if (inputData is IModulate<PicoGHPipe> pipe)
+            {
+                PicoGHPipe output = pipe.DeepCopy();
+                output.SetModulation(modulation1, modulation2);
+                DA.SetData(0, output);
+            }
+            else if (inputData is IModulate<PicoGHBox> box)
+            {
+                PicoGHBox output = box.DeepCopy();
+                output.SetModulation(modulation1, modulation2);
+                DA.SetData(0, output);
+            }         
         }
 
         /// <summary>
