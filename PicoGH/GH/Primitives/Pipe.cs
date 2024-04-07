@@ -114,12 +114,12 @@ namespace PicoGH.Primitives
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Inner radii list must equal the number of curves or only contain a single value.");
                 }
 
-                List<Rhino.Geometry.Plane> curveFrames = new List<Rhino.Geometry.Plane>();
+                List<Plane> curveFrames = new List<Plane>();
 
                 foreach (double parameter in normalisedCurveParameters)
                 {
                     double curveParam = curve.Domain.ParameterAt(parameter);
-                    curve.PerpendicularFrameAt(curveParam, out Rhino.Geometry.Plane frame);
+                    curve.PerpendicularFrameAt(curveParam, out Plane frame);
                     curveFrames.Add(frame);
                 }
 
@@ -129,15 +129,22 @@ namespace PicoGH.Primitives
                 // Here we make sure the construction / preview mesh isn't too overkill
                 double curveLength = curve.GetLength();
 
-                uint lengthSteps = 2;
+                uint lengthSteps;
 
-                if (curve.Degree > 1) lengthSteps = (uint)Math.Ceiling(curveLength / Library.fVoxelSizeMM) / 2;
+                if (curve.Degree > 1)
+                {
+                    lengthSteps = (uint)Math.Ceiling(curveLength / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
+                }
+                else
+                {
+                    lengthSteps = 2;
+                }
 
                 uint radialSteps = (uint)Math.Ceiling(
-                    (outerRadius - innerRadius) / Library.fVoxelSizeMM) / 2;
+                    (outerRadius - innerRadius) / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
 
                 double circumference = 2 * Math.PI * outerRadius;
-                uint polarSteps = (uint)(Math.Ceiling(circumference / Library.fVoxelSizeMM));
+                uint polarSteps = (uint)Math.Ceiling(circumference / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
 
                 outputPipes.Add(new PicoGHPipe(pipe, lengthSteps, radialSteps, polarSteps));
                 //outputPipes.Add(new PicoGHPipe(pipe));
