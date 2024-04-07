@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using PicoGH.PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -40,6 +41,7 @@ namespace PicoGH.Primitives
         {
             pManager.AddCurveParameter("Beams", "B", "Input list of beams", GH_ParamAccess.list);
             pManager.AddNumberParameter("Radius", "R", "Radius", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -61,6 +63,12 @@ namespace PicoGH.Primitives
 
             GH_Number radius = new GH_Number();
             if (!DA.GetData(1, ref radius)) return;
+
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData(2, ref settings)) return;
+
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             Lattice lattice = new Lattice();
 
