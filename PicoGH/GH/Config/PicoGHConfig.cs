@@ -16,6 +16,7 @@ using System;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using PicoGH.PicoGH.Classes;
 using PicoGK;
 
 namespace PicoGH.Config
@@ -32,9 +33,9 @@ namespace PicoGH.Config
         /// Initializes a new instance of the PicoGHConfig class.
         /// </summary>
         public PicoGHConfig()
-          : base("PicoGHConfig", "Config",
+          : base("PicoGHSettings", "Settings",
               "Sets some options for PicoGK",
-              "PicoGH", "Config")
+              "PicoGH", "Settings")
         {
         }
 
@@ -44,7 +45,9 @@ namespace PicoGH.Config
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddNumberParameter("VoxelSize", "V", "Sets the global voxel size for PicoGK. Set higher for faster generation, lower for better resolution.", GH_ParamAccess.item, 0.5);
+            pManager.AddNumberParameter("MeshAdaptivity", "A", "Sets the mesh adaptivity (0-1). Higher values give more decimation.", GH_ParamAccess.item, 0.0);
             pManager.AddNumberParameter("MeshCoarsen", "M", "A coarsening factor for the intermediate meshes. Higher is more coarse (faster).", GH_ParamAccess.item, 4);
+            pManager.AddBooleanParameter("Triangulate", "T", "Triangulate output meshes.", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -52,6 +55,7 @@ namespace PicoGH.Config
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -63,11 +67,22 @@ namespace PicoGH.Config
             GH_Number voxelSize = new GH_Number();
             if (!DA.GetData(0, ref voxelSize)) return;
 
-            GH_Integer meshCoarseningFactor = new GH_Integer();
-            if (!DA.GetData(1, ref  meshCoarseningFactor)) return;
+            GH_Number meshAdaptivity = new GH_Number();
+            if (!DA.GetData(1, ref meshAdaptivity)) return;
 
-            Library.SetVoxelSize((float)voxelSize.Value);
-            Library.SetMeshCoarseningFactor((uint)meshCoarseningFactor.Value);
+            GH_Integer meshCoarseningFactor = new GH_Integer();
+            if (!DA.GetData(2, ref  meshCoarseningFactor)) return;
+
+            GH_Boolean triangulateMeshes = new GH_Boolean();
+            if (!DA.GetData(3, ref triangulateMeshes)) return;
+
+            PicoGHSettings settings = new PicoGHSettings(
+                (float)voxelSize.Value, 
+                (float)meshAdaptivity.Value,
+                triangulateMeshes.Value, 
+                (uint)meshCoarseningFactor.Value);
+
+            DA.SetData(0, settings);
         }
 
         /// <summary>
