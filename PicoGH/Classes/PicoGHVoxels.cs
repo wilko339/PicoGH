@@ -17,6 +17,7 @@ using System;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using PicoGK;
+using Rhino.DocObjects;
 using Rhino.Geometry;
 
 namespace PicoGH
@@ -98,12 +99,21 @@ namespace PicoGH
 
         public override BoundingBox GetBoundingBox(Transform xform)
         {
-            throw new NotImplementedException();
+            return Boundingbox;
         }
 
         public override IGH_GeometricGoo Morph(SpaceMorph xmorph)
         {
-            throw new NotImplementedException();
+            Rhino.Geometry.Mesh outputMesh = RMesh.Duplicate() as Rhino.Geometry.Mesh;
+            if (!xmorph.Morph(RMesh))
+            {
+                throw new Exception("Unable to apply transformation.");
+            }
+            PicoGHVoxels transformed = new PicoGHVoxels();
+            transformed.RMesh = RMesh;
+            transformed.PVoxels = new Voxels(Utilities.RhinoMeshToPicoMesh(RMesh));
+
+            return transformed;
         }
 
         public override string ToString()
