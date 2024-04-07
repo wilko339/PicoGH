@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Leap71.ShapeKernel;
+using PicoGH.PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -22,12 +23,17 @@ namespace PicoGH
 {
     public class Utilities
     {
+        public static void SetGlobalSettings(PicoGHSettings settings)
+        {
+            Library.InitLibrary(settings.VoxelSize, settings.MeshAdaptivity, settings.TriangulateMeshes, settings.MeshCoarseningFactor);
+        }
         public static Rhino.Geometry.Mesh PicoMeshToRhinoMesh(PicoGK.Mesh input)
         {
             int triangleCount = input.nTriangleCount();
+            int quadCount = input.nQuadCount();
             int vertexCount = input.nVertexCount();
 
-            var previewMeshFaces = new Rhino.Geometry.MeshFace[triangleCount];
+            var previewMeshFaces = new List<Rhino.Geometry.MeshFace>();
             var meshVertices = new Point3d[vertexCount];
 
             for (int i = 0; i < vertexCount; i++)
@@ -43,7 +49,13 @@ namespace PicoGH
             for (int i = 0; i < triangleCount; i++)
             {
                 var triangle = input.oTriangleAt(i);
-                previewMeshFaces[i] = new MeshFace(triangle.A, triangle.B, triangle.C);
+                previewMeshFaces.Add(new MeshFace(triangle.A, triangle.B, triangle.C));
+            }
+
+            for (int i = 0; i < quadCount; i++)
+            {
+                var quad = input.oQuadAt(i);
+                previewMeshFaces.Add(new MeshFace(quad.A, quad.B, quad.C, quad.D));
             }
 
             mesh.Faces.AddFaces(previewMeshFaces);
