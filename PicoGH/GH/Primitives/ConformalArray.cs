@@ -39,9 +39,9 @@ namespace PicoGH.Primitives
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Guide", "G", "Shape to guide conformal generation.", GH_ParamAccess.item);
-            pManager.AddIntegerParameter("CellsX", "NX", "Cell count in X.", GH_ParamAccess.item, 5);
-            pManager.AddIntegerParameter("CellsY", "NY", "Cell count in Y.", GH_ParamAccess.item, 5);
-            pManager.AddIntegerParameter("CellsZ", "NZ", "Cell count in Z.", GH_ParamAccess.item, 5);
+            pManager.AddIntegerParameter("X / Length", "NX", "Cell count in X.", GH_ParamAccess.item, 5);
+            pManager.AddIntegerParameter("Y / Radial", "NY", "Cell count in Y.", GH_ParamAccess.item, 5);
+            pManager.AddIntegerParameter("Z / Polar", "NZ", "Cell count in Z.", GH_ParamAccess.item, 5);
         }
 
         /// <summary>
@@ -66,9 +66,9 @@ namespace PicoGH.Primitives
             GH_Number nx = new GH_Number();
             GH_Number ny = new GH_Number();
             GH_Number nz = new GH_Number();
-            if (!DA.GetData("CellsX", ref nx)) return;
-            if (!DA.GetData("CellsY", ref ny)) return;
-            if (!DA.GetData("CellsZ", ref nz)) return;
+            if (!DA.GetData("X / Length", ref nx)) return;
+            if (!DA.GetData("Y / Radial", ref ny)) return;
+            if (!DA.GetData("Z / Polar", ref nz)) return;
 
             ConformalCellArray conformalCellArray = inputData.GenerateConformalArray((uint)nx.Value, (uint)ny.Value, (uint)nz.Value);
 
