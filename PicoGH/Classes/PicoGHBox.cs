@@ -48,11 +48,6 @@ namespace PicoGH.Classes
             _BaseBox.SetDepthSteps(100);
         }
 
-        ConformalCellArray GenerateConformalArray(uint nx, uint ny, uint nz)
-        {
-            return new ConformalCellArray(_BaseBox,  nx, ny, nz);
-        }
-
         public Vector3 PointAtParameter(float p)
         {
             return _BaseBox.m_aFrames.vecGetSpineAlongLength(p);
