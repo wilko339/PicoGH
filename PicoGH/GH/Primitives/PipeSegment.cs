@@ -18,6 +18,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
 using PicoGH.Classes;
+using PicoGH.PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -46,6 +47,7 @@ namespace PicoGH
             pManager.AddIntegerParameter("CurveDivs", "D", "Number of curve divisions to create the pipe", GH_ParamAccess.item);
             pManager.AddGenericParameter("StartMod", "SMod", "Start modulation. Modulates the circumferential position of the pipe segment (twisting).", GH_ParamAccess.item);
             pManager.AddGenericParameter("RangeMod", "RMod", "Range modulation. Modulates the range of the pipe segment circumferentially.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -79,6 +81,12 @@ namespace PicoGH
 
             PicoGHModulation rMod = null;
             if (!DA.GetData(5, ref rMod)) return;
+
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
+
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             List<double> normalisedCurveParameters = new List<double>();
 

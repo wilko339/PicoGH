@@ -55,8 +55,7 @@ namespace PicoGH.PicoGH.IO
             PicoGHVoxels inputVoxels = new PicoGHVoxels();
             if (!DA.GetData(0, ref inputVoxels)) return;
 
-            PicoGK.Mesh pMesh = inputVoxels.GeneratePMesh();
-            Rhino.Geometry.Mesh rMesh = Utilities.PicoMeshToRhinoMesh(pMesh);
+            Rhino.Geometry.Mesh rMesh = inputVoxels.RMesh;
 
             //if (!rMesh.IsValid)
             //{

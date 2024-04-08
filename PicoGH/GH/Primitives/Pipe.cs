@@ -19,6 +19,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
 using PicoGH.Classes;
+using PicoGH.PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -45,6 +46,7 @@ namespace PicoGH.Primitives
             pManager.AddNumberParameter("InnerRadius", "I", "Inner radius.", GH_ParamAccess.list);
             pManager.AddNumberParameter("OuterRadius", "O", "Outer radius.", GH_ParamAccess.list);
             pManager.AddIntegerParameter("CurveDivs", "D", "Number of curve divisions to create the pipe", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -72,6 +74,12 @@ namespace PicoGH.Primitives
 
             GH_Integer curveDivisions = new GH_Integer();
             if (!DA.GetData(3, ref curveDivisions)) return;
+
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
+
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             List<double> normalisedCurveParameters = new List<double>();
             List<PicoGHPipe> outputPipes = new List<PicoGHPipe>();

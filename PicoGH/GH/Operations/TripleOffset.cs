@@ -17,6 +17,7 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using PicoGH.PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -41,6 +42,7 @@ namespace PicoGH.PicoGH.GH.Operations
         {
             pManager.AddGenericParameter("Input", "I", "Input voxels.", GH_ParamAccess.item);
             pManager.AddNumberParameter("Offset", "O", "Offset distance", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -62,6 +64,12 @@ namespace PicoGH.PicoGH.GH.Operations
 
             GH_Number offset = new GH_Number();
             if (!DA.GetData(1, ref offset)) return;
+
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
+
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             Voxels outputVoxels = new Voxels(inputVoxels.PVoxels);
             outputVoxels.TripleOffset((float)offset.Value);

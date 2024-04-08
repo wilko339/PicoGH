@@ -26,7 +26,7 @@ namespace PicoGH.Operations
         {
             pManager.AddGenericParameter("Voxels", "I", "Input voxels.", GH_ParamAccess.item);
             pManager.AddPointParameter("Origin", "O", "Ray origina.", GH_ParamAccess.list);
-            pManager.AddVectorParameter("DIrection", "D", "Ray direction", GH_ParamAccess.list);
+            pManager.AddVectorParameter("Direction", "D", "Ray direction", GH_ParamAccess.list);
         }
 
         /// <summary>

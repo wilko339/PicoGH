@@ -56,11 +56,11 @@ namespace PicoGH.PicoGH.IO
             Rhino.Geometry.Mesh inputMesh = new Rhino.Geometry.Mesh();
             if (!DA.GetData(0, ref inputMesh)) return;
 
-            PicoGK.Mesh pMesh = Utilities.RhinoMeshToPicoMesh(inputMesh);
+            // PicoGK.Mesh pMesh = Utilities.RhinoMeshToPicoMesh(inputMesh);
 
-            Voxels voxels = new Voxels(pMesh);
+            // Voxels voxels = new Voxels(pMesh);
 
-            var output = new PicoGHVoxels(voxels);
+            var output = new PicoGHVoxels(inputMesh);
             DA.SetData(0, output);
         }
 
