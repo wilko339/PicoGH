@@ -67,6 +67,7 @@ namespace PicoGH
         public static PicoGK.Mesh RhinoMeshToPicoMesh(Rhino.Geometry.Mesh inputMesh) 
         {
             PicoGK.Mesh pMesh = new PicoGK.Mesh();
+            inputMesh.Vertices.CombineIdentical(true, true);
 
             foreach (var vertex in inputMesh.Vertices)
             {
@@ -75,11 +76,9 @@ namespace PicoGH
 
             foreach (var meshFace in inputMesh.Faces)
             {
-                // If we find a quad face, this needs to be triangulated to work with PicoGK
                 if (meshFace.IsQuad)
                 {
-                    pMesh.nAddTriangle(new Triangle(meshFace.A, meshFace.B, meshFace.C));
-                    pMesh.nAddTriangle(new Triangle(meshFace.A, meshFace.C, meshFace.D));
+                    pMesh.nAddQuad(new Quad(meshFace.A, meshFace.B, meshFace.C, meshFace.D));
                 }
                 else
                 {
