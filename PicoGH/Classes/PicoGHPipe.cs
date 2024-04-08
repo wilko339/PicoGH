@@ -13,10 +13,12 @@
 //  limitations under the License.
 
 using System.Numerics;
+using Grasshopper.Kernel;
 using Leap71.LatticeLibrary;
 using Leap71.ShapeKernel;
 using PicoGH.Interfaces;
 using PicoGK;
+using Rhino;
 
 namespace PicoGH.Classes
 {
@@ -41,7 +43,7 @@ namespace PicoGH.Classes
             _RadialSteps = radialDivisions;
             _PolarSteps = heightDivisions;
 
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
+            _rMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
         }
 
         /// <summary>

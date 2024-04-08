@@ -14,6 +14,7 @@
 
 using System;
 using System.Numerics;
+using Grasshopper.Kernel.Special;
 using Leap71.LatticeLibrary;
 using Leap71.ShapeKernel;
 using PicoGH.Interfaces;
@@ -29,14 +30,6 @@ namespace PicoGH.Classes
         uint _RadialSteps;
         uint _PolarSteps;
 
-        public PicoGHPipeSegment(BasePipeSegment pipeSegment)
-        {
-            throw new NotImplementedException();
-
-            _BasePipeSegment = pipeSegment;
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
-        }
-
         public PicoGHPipeSegment(BasePipeSegment pipeSegment, uint lengthDivisions, uint radialDivisions, uint polarDivisions)
         {
             _BasePipeSegment= pipeSegment;
@@ -45,7 +38,7 @@ namespace PicoGH.Classes
             _RadialSteps = radialDivisions;
             _PolarSteps = polarDivisions;
 
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
+            _rMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
         }
 
         public void SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2)
@@ -88,11 +81,11 @@ namespace PicoGH.Classes
 
         public override Voxels GenerateVoxels()
         {
-            if (PVoxels == null)
+            if (_pVoxels == null)
             {
-                PVoxels = _BasePipeSegment.voxConstruct();
+                _pVoxels = _BasePipeSegment.voxConstruct();
             }
-            return PVoxels;
+            return _pVoxels;
         }
 
         public ConformalCellArray GenerateConformalArray(uint nx, uint ny, uint nz)
