@@ -24,35 +24,100 @@ namespace PicoGH
 {
     public class PicoGHVoxels : GH_GeometricGoo<Rhino.Geometry.Mesh>, IGH_PreviewData
     {
-        public PicoGK.Mesh PMesh;
-        public PicoGK.Voxels PVoxels;
-        public Rhino.Geometry.Mesh RMesh;
-
-        public PicoGHVoxels() { }
-        public PicoGHVoxels(PicoGK.Voxels voxels)
+        protected Voxels _pVoxels;
+        protected PicoGK.Mesh _pMesh;
+        protected Rhino.Geometry.Mesh _rMesh;
+        public PicoGK.Voxels PVoxels
         {
-            PVoxels = voxels;
-            PMesh = GeneratePMesh();
-            RMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
+            get 
+            { 
+                if (_pVoxels != null)
+                {
+                    _pVoxels.CalculateProperties(out var vol, out var _);
+                    if (vol == 0)
+                    {
+                        _pVoxels = GenerateVoxels();
+                    }
+                }
+                if (_pVoxels is null)
+                {
+                    _pVoxels = GenerateVoxels();
+                }
+                return _pVoxels; 
+            }
+        }
+        public PicoGK.Mesh PMesh
+        {
+            get
+            { 
+                if (_pMesh is null)
+                {
+                    _pMesh = GeneratePMesh();
+                }
+                return _pMesh;
+            }
+        }
+        public Rhino.Geometry.Mesh RMesh
+        {
+            get
+            {
+                if (_rMesh is null)
+                {
+                    _rMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
+                }
+                return _rMesh;
+            }
+            set
+            {
+                _rMesh = value;
+            }
+        }
+
+        public PicoGHVoxels() 
+        {
+            _pMesh = null;
+            _rMesh = null;
+            _pVoxels = null;
+        }
+        public PicoGHVoxels(Voxels voxels)
+        {
+            _pVoxels = voxels;
+            _pMesh = GeneratePMesh();
+            _rMesh = Utilities.PicoMeshToRhinoMesh(_pMesh);
+        }
+
+        public PicoGHVoxels(Rhino.Geometry.Mesh mesh)
+        {
+            _rMesh = mesh;
+            _pMesh = Utilities.RhinoMeshToPicoMesh(mesh);
+            _pVoxels = new Voxels(_pMesh);
         }
 
         public virtual Voxels GenerateVoxels()
         {
-            if (PVoxels == null)
+            if (_pMesh.FaceCount > 0)
             {
-                throw new NotImplementedException("Child must override this method.");
+                _pVoxels = new Voxels(_pMesh);
+                return _pVoxels;
             }
-            return PVoxels;
+
+            if (_rMesh.Faces.Count > 0)
+            {
+                _pMesh = Utilities.RhinoMeshToPicoMesh(_rMesh);
+                _pVoxels = new Voxels(_pMesh);
+                return (_pVoxels);
+            }
+
+            else
+            {
+                throw new Exception("Unable to generate voxels");
+            }
         }
 
         public virtual PicoGK.Mesh GeneratePMesh()
         {
             // This is usually overridden by a child class, but sometimes we only have the voxel field (such as converting a mesh to voxels).
-            if (PMesh == null)
-            {
-                return PVoxels.mshAsMesh();
-            }
-            return PMesh;
+            return _pVoxels.mshAsMesh();
         }
 
         public BoundingBox ClippingBox
@@ -109,9 +174,7 @@ namespace PicoGH
             {
                 throw new Exception("Unable to apply transformation.");
             }
-            PicoGHVoxels transformed = new PicoGHVoxels();
-            transformed.RMesh = RMesh;
-            transformed.PVoxels = new Voxels(Utilities.RhinoMeshToPicoMesh(RMesh));
+            PicoGHVoxels transformed = new PicoGHVoxels(outputMesh);
 
             return transformed;
         }
@@ -124,8 +187,8 @@ namespace PicoGH
         public override IGH_GeometricGoo Transform(Transform xform)
         {
             RMesh.Transform(xform);
-            PMesh = Utilities.RhinoMeshToPicoMesh(RMesh);
-            PVoxels = new Voxels(PMesh);
+            _pMesh = Utilities.RhinoMeshToPicoMesh(RMesh);
+            _pVoxels = new Voxels(PMesh);
 
             return new PicoGHVoxels(PVoxels);
         }
