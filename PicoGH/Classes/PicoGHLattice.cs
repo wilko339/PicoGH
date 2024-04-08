@@ -30,9 +30,6 @@ namespace PicoGH.Classes
             _CellArray = cellArray;
             _CellType = new BodyCentreLattice();
             _BeamThickness = new ConstantBeamThickness(beamDiameter);
-
-            PVoxels = GenerateVoxels();
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
         }
 
         public override Voxels GenerateVoxels()
