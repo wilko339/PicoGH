@@ -82,15 +82,15 @@ namespace PicoGH
         public PicoGHVoxels(Voxels voxels)
         {
             _pVoxels = voxels;
-            _pMesh = GeneratePMesh();
-            _rMesh = Utilities.PicoMeshToRhinoMesh(_pMesh);
+            _pMesh = null;
+            _rMesh = null;
         }
 
         public PicoGHVoxels(Rhino.Geometry.Mesh mesh)
         {
             _rMesh = mesh;
-            _pMesh = Utilities.RhinoMeshToPicoMesh(mesh);
-            _pVoxels = new Voxels(_pMesh);
+            _pMesh = Utilities.RhinoMeshToPicoMesh(_rMesh);
+            _pVoxels = null;
         }
 
         public virtual Voxels GenerateVoxels()
@@ -124,7 +124,7 @@ namespace PicoGH
         {
             get
             {
-                return RMesh.GetBoundingBox(false);
+                return RMesh == null ? new BoundingBox(): RMesh.GetBoundingBox(false);
             }
         }
 
@@ -133,6 +133,15 @@ namespace PicoGH
             get
             {
                 return RMesh.GetBoundingBox(false);
+            }
+        }
+
+        public BBox3 PicoBoundingBox
+        {
+            get
+            {
+                PVoxels.CalculateProperties(out var _, out var bbox);
+                return bbox;
             }
         }
 
@@ -148,7 +157,10 @@ namespace PicoGH
 
         public void DrawViewportMeshes(GH_PreviewMeshArgs args)
         {
-            args.Pipeline.DrawMeshShaded(RMesh, args.Material);
+            if (RMesh != null)
+            {
+                args.Pipeline.DrawMeshShaded(RMesh, args.Material);
+            }
         }
 
         public void DrawViewportWires(GH_PreviewWireArgs args)

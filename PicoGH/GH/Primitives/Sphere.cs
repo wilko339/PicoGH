@@ -42,6 +42,7 @@ namespace PicoGH
             pManager.AddPlaneParameter("Centre", "C", "Centre", GH_ParamAccess.item,
                 Rhino.Geometry.Plane.WorldXY);
             pManager.AddNumberParameter("Radius", "R", "Radius", GH_ParamAccess.item, 5.0d);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -63,6 +64,12 @@ namespace PicoGH
 
             var radius = new GH_Number();
             if (!DA.GetData(1, ref radius)) return;
+
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
+
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             var origin = basePlane.Origin;
             var baseFrame = new LocalFrame(new Vector3((float)origin.X, (float)origin.Y, (float)origin.Z));

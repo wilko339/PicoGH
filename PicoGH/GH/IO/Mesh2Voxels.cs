@@ -15,9 +15,9 @@
 using System;
 
 using Grasshopper.Kernel;
-using PicoGK;
+using PicoGH.Classes;
 
-namespace PicoGH.PicoGH.IO
+namespace PicoGH.IO
 {
     public class Mesh2Voxels : GH_Component
     {
@@ -37,6 +37,7 @@ namespace PicoGH.PicoGH.IO
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddMeshParameter("Mesh", "M", "Input _rmesh to convert", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -56,9 +57,11 @@ namespace PicoGH.PicoGH.IO
             Rhino.Geometry.Mesh inputMesh = new Rhino.Geometry.Mesh();
             if (!DA.GetData(0, ref inputMesh)) return;
 
-            // PicoGK.Mesh pMesh = Utilities.RhinoMeshToPicoMesh(inputMesh);
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
 
-            // Voxels voxels = new Voxels(pMesh);
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             var output = new PicoGHVoxels(inputMesh);
             DA.SetData(0, output);

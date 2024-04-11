@@ -16,10 +16,10 @@ using System;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using PicoGH.PicoGH.Classes;
+using PicoGH.Classes;
 using PicoGK;
 
-namespace PicoGH.PicoGH.GH.Operations
+namespace PicoGH.GH.Operations
 {
     public class Offset : GH_Component
     {

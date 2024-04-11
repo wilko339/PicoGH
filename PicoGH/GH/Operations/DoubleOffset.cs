@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using PicoGH.PicoGH.Classes;
+using PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
-namespace PicoGH.PicoGH.GH.Operations
+namespace PicoGH.GH.Operations
 {
     public class DoubleOffset : GH_Component
     {
@@ -62,7 +62,11 @@ namespace PicoGH.PicoGH.GH.Operations
             Utilities.SetGlobalSettings(settings);
 
             Voxels outputVoxels = new Voxels(inputVoxels.PVoxels);
-            outputVoxels.DoubleOffset((float)offset1.Value, (float)offset2.Value);
+
+            if (offset1.Value != 0 && offset2.Value != 0)
+            {
+                outputVoxels.DoubleOffset((float)offset1.Value, (float)offset2.Value);
+            }
 
             DA.SetData(0, new PicoGHVoxels(outputVoxels));
         }

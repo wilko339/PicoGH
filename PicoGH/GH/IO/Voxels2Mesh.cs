@@ -57,17 +57,10 @@ namespace PicoGH.PicoGH.IO
 
             Rhino.Geometry.Mesh rMesh = inputVoxels.RMesh;
 
-            //if (!rMesh.IsValid)
-            //{
-            //    PicoGK.Mesh tempMesh = new PicoGK.Mesh(inputVoxels.GenerateVoxels());
-            //    rMesh = Utilities.PicoMeshToRhinoMesh(tempMesh);
-            //}
-
             if (!rMesh.IsValid)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Output mesh is invalid.");
             }
-
             DA.SetData(0, rMesh);
         }
 

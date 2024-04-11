@@ -15,6 +15,7 @@
 using System;
 
 using Grasshopper.Kernel;
+using PicoGH.Classes;
 using PicoGK;
 
 namespace PicoGH
@@ -38,6 +39,7 @@ namespace PicoGH
         {
             pManager.AddGenericParameter("OperandA", "A", "Operand A", GH_ParamAccess.item);
             pManager.AddGenericParameter("OperandB", "B", "Operand B", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -59,24 +61,14 @@ namespace PicoGH
             if (!DA.GetData(0, ref a)) ;
             if (!DA.GetData(1, ref b)) ;
 
-            Voxels result = new Voxels();
-            if (a.PVoxels is null)
-            {
-                result.BoolAdd(a.GenerateVoxels());
-            }
-            else
-            {
-                result.BoolAdd(a.PVoxels);
-            }
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
 
-            if (b.PVoxels is null)
-            {
-                result.BoolAdd(b.GenerateVoxels());
-            }
-            else
-            {
-                result.BoolAdd(b.PVoxels);
-            }
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
+
+            Voxels result = new Voxels();
+            result.BoolAdd(a.PVoxels);
             result.BoolAdd(b.PVoxels);
 
             PicoGHVoxels output = new PicoGHVoxels(result);

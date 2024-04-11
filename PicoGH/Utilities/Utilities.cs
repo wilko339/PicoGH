@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Leap71.ShapeKernel;
-using PicoGH.PicoGH.Classes;
+using PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -29,6 +29,8 @@ namespace PicoGH
         }
         public static Rhino.Geometry.Mesh PicoMeshToRhinoMesh(PicoGK.Mesh input)
         {
+            if (input == null) return null;
+
             int triangleCount = input.nTriangleCount();
             int quadCount = input.nQuadCount();
             int vertexCount = input.nVertexCount();

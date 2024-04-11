@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using PicoGH.PicoGH.Classes;
+using PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 

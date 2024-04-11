@@ -19,22 +19,21 @@ namespace PicoGH.Classes
 {
     public class PicoGHSphere : PicoGHVoxels
     {
-        private BaseSphere _BaseSphere;
+        BaseSphere _baseSphere;
 
         public PicoGHSphere(BaseSphere baseSphere)
         {
-            _BaseSphere = baseSphere;
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
+            _baseSphere = baseSphere;
         }
 
         public override Mesh GeneratePMesh()
         {
-            return _BaseSphere.mshConstruct();
+            return _baseSphere.mshConstruct();
         }
 
         public override Voxels GenerateVoxels()
         {
-            return _BaseSphere.voxConstruct();
+            return _baseSphere.voxConstruct();
         }
     }
 }

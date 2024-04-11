@@ -37,8 +37,8 @@ namespace PicoGH.Operations
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Shape", "S", "Input shape to apply modulations.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("InnerMod", "I", "Modulation to apply to the inner radius.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("OuterMod", "I", "Modulation to apply to the outer radius.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("InnerMod", "I", "Modulation to apply to the inner _radius.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("OuterMod", "I", "Modulation to apply to the outer _radius.", GH_ParamAccess.item);
 
         }
 

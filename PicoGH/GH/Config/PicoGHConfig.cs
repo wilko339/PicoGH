@@ -16,8 +16,7 @@ using System;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using PicoGH.PicoGH.Classes;
-using PicoGK;
+using PicoGH.Classes;
 
 namespace PicoGH.Config
 {
@@ -81,6 +80,8 @@ namespace PicoGH.Config
                 (float)meshAdaptivity.Value,
                 triangulateMeshes.Value, 
                 (uint)meshCoarseningFactor.Value);
+
+            Utilities.SetGlobalSettings(settings);
 
             DA.SetData(0, settings);
         }

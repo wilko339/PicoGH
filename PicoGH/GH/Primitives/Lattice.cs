@@ -38,7 +38,7 @@ namespace PicoGH.PicoGH.Primitives
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("CellArray", "C", "Cell array", GH_ParamAccess.item);
-            pManager.AddGenericParameter("BeamRadius", "R", "Beam radius", GH_ParamAccess.item);
+            pManager.AddGenericParameter("BeamRadius", "R", "Beam _radius", GH_ParamAccess.item);
         }
 
         /// <summary>

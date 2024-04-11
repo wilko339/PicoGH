@@ -13,7 +13,7 @@
 //  limitations under the License.
 
 
-namespace PicoGH.PicoGH.Classes
+namespace PicoGH.Classes
 {
     public class PicoGHSettings
     {

@@ -43,8 +43,8 @@ namespace PicoGH.Primitives
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddCurveParameter("Curve", "C", "Input Curve/s", GH_ParamAccess.list);
-            pManager.AddNumberParameter("InnerRadius", "I", "Inner radius.", GH_ParamAccess.list);
-            pManager.AddNumberParameter("OuterRadius", "O", "Outer radius.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("InnerRadius", "I", "Inner _radius.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("OuterRadius", "O", "Outer _radius.", GH_ParamAccess.list);
             pManager.AddIntegerParameter("CurveDivs", "D", "Number of curve divisions to create the pipe", GH_ParamAccess.item);
             pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
