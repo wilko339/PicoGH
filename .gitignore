@@ -366,3 +366,7 @@ FodyWeavers.xsd
 *.3dm
 *.3dmbak
 /.editorconfig
+Properties/launchSettings.json
+picogk.1.3.dll
+Properties/launchSettings.json
+PicoGH.sln

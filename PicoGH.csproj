@@ -9,16 +9,16 @@
   </PropertyGroup>
 	
   <ItemGroup>
-    <Compile Remove="LEAP71_ShapeKernel\Examples\**" />
+    <Compile Remove="Leap71_ShapeKernel\Examples\**" />
     <Compile Remove="PicoGK\Examples\**" />
-    <EmbeddedResource Remove="LEAP71_ShapeKernel\Examples\**" />
+    <EmbeddedResource Remove="Leap71_ShapeKernel\Examples\**" />
     <EmbeddedResource Remove="PicoGK\Examples\**" />
-    <None Remove="LEAP71_ShapeKernel\Examples\**" />
+    <None Remove="Leap71_ShapeKernel\Examples\**" />
     <None Remove="PicoGK\Examples\**" />
   </ItemGroup>
 	
   <ItemGroup>
-    <Compile Remove="LEAP71_ShapeKernel\ShapeKernel\BaseShapes\BaseLogoBox.cs" />
+    <Compile Remove="Leap71_ShapeKernel\ShapeKernel\BaseShapes\BaseLogoBox.cs" />
     <Compile Remove="PicoGK\PicoGK_Cli.cs" />
     <Compile Remove="PicoGK\PicoGK_Csv.cs" />
     <Compile Remove="PicoGK\PicoGK_Image.cs" />
