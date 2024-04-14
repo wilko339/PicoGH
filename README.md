@@ -12,7 +12,7 @@ This project contains three submodule dependencies, Leap71_LatticeLibrary, Leap7
 The main PicoGH stuff is within the folder named PicoGH. All the front-end Grasshopper components are located in GH, and further organised into folders depending on their function. The other folders contain all the custom data types we use to go between Grasshopper and PicoGK. Many of these are just simple wrappers of the equivalent ShapeKernel shapes, but there are some Interfaces and Utilities to help us out. 
 
 ## PicoGKRuntime
-This project relies on a modified PicoGKRuntime C++ backend. The main change is that it now supports quad faces. 
+This project relies on a modified PicoGKRuntime C++ backend (https://github.com/wilko339/PicoGKRuntime). The main change is that it now supports quad faces. 
 
 ## Classes
 Inside the Classes folder in PicoGH, we find the classes that will manage all our important data. 
