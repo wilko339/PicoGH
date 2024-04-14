@@ -31,12 +31,12 @@ Usually, this class will be subclassed into something like a PicoGHPipeSegment w
 Modulations come from ShapeKernel. These are a way of modifying certain geometric parameters with functions, such as varying the radius of a pipe along the length, or around the circumferential direction. Shapes that can be modulated need to implement the IModulate interface. 
 
 ## Latticing
-There are some wrappers for the LatticeLibrary, namely PicoGHLattice and PicoGHConformalCellArray. The conformal array uses a PicoGH shape that implements the IConformalArray interface to generate the list of unit cells. 
+There are some wrappers for the LatticeLibrary, namely PicoGHLattice and PicoGHConformalCellArray. The conformal array uses a PicoGH shape that implements the IConformalArray interface to generate the list of unit cells. Use the "Lattice" component to generate a BCC lattice within the generated conformal cell array.
 
 Aside from this, there is a component called Struts that allows the user to pass in a list of line/curve segments and a radius, and this creates a lattice object from this list of lines/curves. Since there are already so many amazing tools in Grasshopper for doing this (Intralattice, voronoi, delauney, etc), I am not sure how much of the functionality of LatticeLibrary we need to wrap. We just need to make sure the user can interface well with lines and curves from Grasshopper, and make it performant :rocket:.
 
 ## Implicits
-There are no implicits in PicoGH for now, but these will be a huge addition so these should be wrapped soon. This library isn't a real library until it can make gyroids, right? :eyes:
+The current version contains an implicit sphere and a gyroid TPMS lattice. More implicit functionality will be added in the future. 
 
 ## IO
 This library should not replace but complement a preexisting workflow. The user should be able to seamlessly exchange components on their canvas with an optimised PicoGH alternative that provides more reliability, speed, etc. 
@@ -48,7 +48,9 @@ As a baseline, this project should keep up with important features implemented i
 
 There will be a GitHub project associated with this repo to track new features, issues, suggestions etc. 
 
-Since this library is made possible thanks to a huge amount of work done by Josefine and Lin from Leap71, any extra functionality or new features discovered during the development of this library that would benefit the PicoGK / ShapeKernel / LatticeLibrary projects should be brought to their attention. 
+Since this library is made possible thanks to a huge amount of work done by Josefine and Lin from Leap71, any extra functionality or new features discovered during the development of this library that would benefit the PicoGK / ShapeKernel / LatticeLibrary projects should be brought to their attention. Check out their work:
+- https://github.com/leap71
+- https://leap71.com/
 
 # Current Contributors
 
