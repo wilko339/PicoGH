@@ -5,8 +5,6 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PicoGH", "PicoGH.csproj", "{2ED90321-1E0F-48D2-9766-FC02221A102C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "picogk.1.3", "..\PicoGKRuntime\Build\picogk.1.3.vcxproj", "{835F7B7B-2964-3489-A111-9AEDAE872BCF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,22 +33,6 @@ Global
 		{2ED90321-1E0F-48D2-9766-FC02221A102C}.RelWithDebInfo|Any CPU.Build.0 = Release|Any CPU
 		{2ED90321-1E0F-48D2-9766-FC02221A102C}.RelWithDebInfo|x64.ActiveCfg = Release|Any CPU
 		{2ED90321-1E0F-48D2-9766-FC02221A102C}.RelWithDebInfo|x64.Build.0 = Release|Any CPU
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Debug|Any CPU.Build.0 = Debug|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Debug|x64.ActiveCfg = Debug|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Debug|x64.Build.0 = Debug|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.MinSizeRel|Any CPU.ActiveCfg = MinSizeRel|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.MinSizeRel|Any CPU.Build.0 = MinSizeRel|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Release|Any CPU.ActiveCfg = Release|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Release|Any CPU.Build.0 = Release|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Release|x64.ActiveCfg = Release|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.Release|x64.Build.0 = Release|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.RelWithDebInfo|Any CPU.ActiveCfg = RelWithDebInfo|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.RelWithDebInfo|Any CPU.Build.0 = RelWithDebInfo|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
-		{835F7B7B-2964-3489-A111-9AEDAE872BCF}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

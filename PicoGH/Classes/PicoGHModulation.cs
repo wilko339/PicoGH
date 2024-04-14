@@ -18,8 +18,24 @@ namespace PicoGH.Classes
 {
     public class PicoGHModulation
     {
-        public LineModulation _lModulation;
-        public SurfaceModulation _sModulation;
+        LineModulation _lModulation;
+        SurfaceModulation _sModulation;
+
+        public LineModulation LineModulation
+        {
+            get
+            {
+                return _lModulation;
+            }
+        }
+
+        public SurfaceModulation SurfaceModulation
+        {
+            get
+            {
+                return _sModulation;
+            }
+        }
 
         protected float A;
         protected float B;

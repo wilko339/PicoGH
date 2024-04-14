@@ -26,7 +26,7 @@ namespace PicoGH.Operations
         /// </summary>
         public ApplyModulation()
           : base("PicoApplyModulation", "ApplyMod",
-              "Applies surface modulations to change the inner and outer radii of a compatible object.",
+              "Applies surface modulations to modify a compatible object.",
               "PicoGH", "Modulations")
         {
         }
@@ -36,9 +36,9 @@ namespace PicoGH.Operations
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "Input shape to apply modulations.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("InnerMod", "I", "Modulation to apply to the inner _radius.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("OuterMod", "I", "Modulation to apply to the outer _radius.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Voxels", "V", "Input shape to apply modulations.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Mod1", "I", "Inner radius (pipe, pipe segment), or width (box) modulation", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Mod2", "I", "Outer radius (pipe, pipe segment), or depth (box) modulation", GH_ParamAccess.item);
 
         }
 

@@ -24,26 +24,22 @@ namespace PicoGH.Classes
 {
     public class PicoGHPipe : PicoGHVoxels, IModulate<PicoGHPipe>, IConformalArray
     {
-        private BasePipe _BasePipe;
-        private uint _LengthDivisions = 10;
-        private uint _RadialSteps = 20;
-        private uint _PolarSteps = 20;
+        BasePipe _basePipe;
+        uint _lengthDivisions = 10;
+        uint _radialSteps = 20;
+        uint _polarSteps = 20;
 
         public PicoGHPipe(BasePipe pipe)
         {
-            _BasePipe = pipe;
-
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
+            _basePipe = pipe;
         }
 
         public PicoGHPipe(BasePipe pipe, uint lengthDivisions, uint radialDivisions, uint heightDivisions)
         {
-            _BasePipe = pipe;
-            _LengthDivisions = lengthDivisions;
-            _RadialSteps = radialDivisions;
-            _PolarSteps = heightDivisions;
-
-            _rMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
+            _basePipe = pipe;
+            _lengthDivisions = lengthDivisions;
+            _radialSteps = radialDivisions;
+            _polarSteps = heightDivisions;
         }
 
         /// <summary>
@@ -53,47 +49,47 @@ namespace PicoGH.Classes
         /// <returns></returns>
         public Vector3 PointAtParameter(float p)
         {
-            return _BasePipe.m_aFrames.vecGetSpineAlongLength(p);
+            return _basePipe.m_aFrames.vecGetSpineAlongLength(p);
         }
         public void SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2)
         {
             SurfaceModulation innerMod;
             SurfaceModulation outerMod;
 
-            if (modulation1._sModulation is null & modulation2._sModulation is null)
+            if (modulation1.SurfaceModulation is null & modulation2.SurfaceModulation is null)
             {
-                innerMod = new SurfaceModulation(modulation1._lModulation);
-                outerMod = new SurfaceModulation(modulation2._lModulation);
+                innerMod = new SurfaceModulation(modulation1.LineModulation);
+                outerMod = new SurfaceModulation(modulation2.LineModulation);
             }
             else
             {
-                innerMod = modulation1._sModulation;
-                outerMod = modulation2._sModulation;
+                innerMod = modulation1.SurfaceModulation;
+                outerMod = modulation2.SurfaceModulation;
             }
 
-            _BasePipe.SetRadius(innerMod, outerMod);
+            _basePipe.SetRadius(innerMod, outerMod);
 
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
-
-            //return output;
+            // Clear the old data to trigger a regeneration when needed.
+            _rMesh = null;
+            _pVoxels = null;
         }
 
         public override Mesh GeneratePMesh()
         {
-            _BasePipe.SetLengthSteps(_LengthDivisions);
-            _BasePipe.SetRadialSteps(_RadialSteps);
-            _BasePipe.SetPolarSteps(_PolarSteps);
-            return _BasePipe.mshConstruct();
+            _basePipe.SetLengthSteps(_lengthDivisions);
+            _basePipe.SetRadialSteps(_radialSteps);
+            _basePipe.SetPolarSteps(_polarSteps);
+            return _basePipe.mshConstruct();
         }
 
         public override Voxels GenerateVoxels()
         {
-            return _BasePipe.voxConstruct();
+            return _basePipe.voxConstruct();
         }
 
         public ConformalCellArray GenerateConformalArray(uint nx, uint ny, uint nz)
         {
-            return new ConformalCellArray(_BasePipe, nx, ny, nz);
+            return new ConformalCellArray(_basePipe, nx, ny, nz);
         }
 
         public PicoGHPipe DeepCopy()
@@ -101,7 +97,7 @@ namespace PicoGH.Classes
             PicoGHPipe clone = (PicoGHPipe)this.MemberwiseClone();
 
             // Reference types
-            clone._BasePipe = _BasePipe.DeepClone();
+            clone._basePipe = _basePipe.DeepClone();
 
             return clone;
         }

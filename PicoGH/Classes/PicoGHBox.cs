@@ -22,50 +22,59 @@ namespace PicoGH.Classes
 {
     public class PicoGHBox : PicoGHVoxels, IModulate<PicoGHBox>, IConformalArray
     {
-        public BaseBox _BaseBox;
+        BaseBox _baseBox;
+        uint _lengthDivisions = 10;
+        uint _widthDivisions = 10;
+        uint _depthDivisions = 10;
+
         public PicoGHBox(BaseBox baseBox)
         {
-            _BaseBox = baseBox;
-            RMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
+            _baseBox = baseBox;
+        }
+
+        public PicoGHBox(BaseBox baseBox, uint lengthDivisions, uint widthDivisions, uint depthDivisions) : this(baseBox)
+        {
+            _lengthDivisions = lengthDivisions;
+            _widthDivisions = widthDivisions;
+            _depthDivisions = depthDivisions;
         }
 
         public void SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2)
         {
-            _BaseBox.SetWidth(modulation1._lModulation);
-            _BaseBox.SetDepth(modulation2._lModulation);
+            LineModulation widthMod = modulation1.LineModulation;
+            LineModulation depthMod = modulation2.LineModulation;
 
-            if (!(modulation1._lModulation.m_aDiscreteLengthRatios is null))
-            {
-                _BaseBox.SetLengthSteps((uint)modulation1._lModulation.m_aDiscreteLengthRatios.Count);
-            }
+            _baseBox.SetWidth(widthMod);
+            _baseBox.SetDepth(depthMod);
 
-            if (!(modulation2._lModulation.m_aDiscreteLengthRatios is null))
-            {
-                _BaseBox.SetLengthSteps((uint)modulation2._lModulation.m_aDiscreteLengthRatios.Count);
-            }
+            //_rMesh = Utilities.PicoMeshToRhinoMesh(GeneratePMesh());
 
-            _BaseBox.SetWidthSteps(100);
-            _BaseBox.SetDepthSteps(100);
+            // Clear the old data to trigger a regeneration when needed.
+            _rMesh = null;
+            _pVoxels = null;
         }
 
         public Vector3 PointAtParameter(float p)
         {
-            return _BaseBox.m_aFrames.vecGetSpineAlongLength(p);
+            return _baseBox.m_aFrames.vecGetSpineAlongLength(p);
         }
 
         public override Mesh GeneratePMesh()
         {
-            return _BaseBox.mshConstruct();
+            return _baseBox.mshConstruct();
         }
 
         public override Voxels GenerateVoxels()
         {
-            return _BaseBox.voxConstruct();
+            _baseBox.SetDepthSteps(_depthDivisions);
+            _baseBox.SetWidthSteps(_widthDivisions);
+            _baseBox.SetLengthSteps(_lengthDivisions);
+            return _baseBox.voxConstruct();
         }
 
         ConformalCellArray IConformalArray.GenerateConformalArray(uint nx, uint ny, uint nz)
         {
-            return new ConformalCellArray(_BaseBox, (uint)nx, (uint)ny, (uint)nz);
+            return new ConformalCellArray(_baseBox, (uint)nx, (uint)ny, (uint)nz);
         }
 
         public PicoGHBox DeepCopy()
@@ -73,7 +82,7 @@ namespace PicoGH.Classes
             PicoGHBox clone = (PicoGHBox)MemberwiseClone();
 
             // Reference types
-            clone._BaseBox = _BaseBox.DeepClone();
+            clone._baseBox = _baseBox.DeepClone();
 
             return clone;
         }

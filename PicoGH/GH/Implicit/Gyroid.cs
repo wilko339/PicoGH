@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Numerics;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.LatticeLibrary;
@@ -64,8 +64,10 @@ namespace PicoGH.GH.Implicit
 
             ImplicitSplitWallGyroid gyroid = new ImplicitSplitWallGyroid(
                 (float)cellSize.Value, 
-                (float)wallThickness.Value, 
-                true);
+                new Vector3((float)voxelRegion.Centroid.X,
+                (float)voxelRegion.Centroid.Y,
+                (float)voxelRegion.Centroid.Z),
+                (float)wallThickness.Value);
 
             PicoGHGyroid picoGHGyroid = new PicoGHGyroid(gyroid, voxelRegion);
 
