@@ -24,21 +24,19 @@ namespace PicoGH.Classes
 {
     public class PicoGHPipeSegment : PicoGHVoxels, IModulate<PicoGHPipeSegment>, IConformalArray
     {
-        BasePipeSegment _BasePipeSegment;
+        BasePipeSegment _basePipeSegment;
 
-        uint _LengthDivisions;
-        uint _RadialSteps;
-        uint _PolarSteps;
+        uint _lengthDivisions;
+        uint _radialSteps;
+        uint _polarSteps;
 
         public PicoGHPipeSegment(BasePipeSegment pipeSegment, uint lengthDivisions, uint radialDivisions, uint polarDivisions)
         {
-            _BasePipeSegment= pipeSegment;
+            _basePipeSegment = pipeSegment;
 
-            _LengthDivisions = lengthDivisions;
-            _RadialSteps = radialDivisions;
-            _PolarSteps = polarDivisions;
-
-            _rMesh = Utilities.PicoMeshToRhinoMesh(PMesh);
+            _lengthDivisions = lengthDivisions;
+            _radialSteps = radialDivisions;
+            _polarSteps = polarDivisions;
         }
 
         public void SetModulation(PicoGHModulation modulation1, PicoGHModulation modulation2)
@@ -46,35 +44,35 @@ namespace PicoGH.Classes
             SurfaceModulation surfMod1;
             SurfaceModulation surfMod2;
 
-            if ((modulation1._lModulation is null) & (modulation2._lModulation is null))
+            if ((modulation1.LineModulation is null) & (modulation2.LineModulation is null))
             {
-                surfMod1 = modulation1._sModulation;
-                surfMod2 = modulation2._sModulation;
+                surfMod1 = modulation1.SurfaceModulation;
+                surfMod2 = modulation2.SurfaceModulation;
             }
             else
             {
-                surfMod1 = new SurfaceModulation(modulation1._lModulation);
-                surfMod2 = new SurfaceModulation(modulation2._lModulation);
+                surfMod1 = new SurfaceModulation(modulation1.LineModulation);
+                surfMod2 = new SurfaceModulation(modulation2.LineModulation);
             }
 
-            _BasePipeSegment.SetRadius(surfMod1, surfMod2);
+            _basePipeSegment.SetRadius(surfMod1, surfMod2);
 
-            var pMesh = GeneratePMesh();
-
-            RMesh = Utilities.PicoMeshToRhinoMesh(pMesh);
+            // Clear the old data to trigger a regeneration when needed.
+            _rMesh = null;
+            _pVoxels = null;
         }
 
         public Vector3 PointAtParameter(float p)
         {
-            return _BasePipeSegment.m_aFrames.vecGetSpineAlongLength(p);
+            return _basePipeSegment.m_aFrames.vecGetSpineAlongLength(p);
         }
 
         public override Mesh GeneratePMesh()
         {
-            _BasePipeSegment.SetLengthSteps(_LengthDivisions);
-            _BasePipeSegment.SetRadialSteps(_RadialSteps);
-            _BasePipeSegment.SetPolarSteps(_PolarSteps);
-            var mesh = _BasePipeSegment.mshConstruct();
+            _basePipeSegment.SetLengthSteps(_lengthDivisions);
+            _basePipeSegment.SetRadialSteps(_radialSteps);
+            _basePipeSegment.SetPolarSteps(_polarSteps);
+            var mesh = _basePipeSegment.mshConstruct();
 
             return mesh;
         }
@@ -83,14 +81,14 @@ namespace PicoGH.Classes
         {
             if (_pVoxels == null)
             {
-                _pVoxels = _BasePipeSegment.voxConstruct();
+                _pVoxels = _basePipeSegment.voxConstruct();
             }
             return _pVoxels;
         }
 
         public ConformalCellArray GenerateConformalArray(uint nx, uint ny, uint nz)
         {
-            return new ConformalCellArray(_BasePipeSegment, nx, ny, nz);
+            return new ConformalCellArray(_basePipeSegment, nx, ny, nz);
         }
 
         public PicoGHPipeSegment DeepCopy()
@@ -98,7 +96,7 @@ namespace PicoGH.Classes
             PicoGHPipeSegment clone = (PicoGHPipeSegment)MemberwiseClone();
 
             // Reference types
-            clone._BasePipeSegment = _BasePipeSegment.DeepClone();
+            clone._basePipeSegment = _basePipeSegment.DeepClone();
 
             return clone;
         }
