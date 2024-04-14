@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
+using PicoGH.Classes;
 using PicoGK;
 
 namespace PicoGH
@@ -38,6 +39,7 @@ namespace PicoGH
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Input", "I", "Input list of voxel objects to union.", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -55,7 +57,13 @@ namespace PicoGH
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             List<PicoGHVoxels> input = new List<PicoGHVoxels>();
-            if (!DA.GetDataList(0, input)) return;
+            if (!DA.GetDataList("Input", input)) return;
+
+            PicoGHSettings settings = new PicoGHSettings();
+            if (!DA.GetData("Settings", ref settings)) return;
+
+            // Set the PicoGK library settings. 
+            Utilities.SetGlobalSettings(settings);
 
             Voxels boolVox = new Voxels();
 

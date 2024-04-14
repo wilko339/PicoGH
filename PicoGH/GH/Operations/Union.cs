@@ -58,8 +58,8 @@ namespace PicoGH
         {
             PicoGHVoxels a = new PicoGHVoxels();
             PicoGHVoxels b = new PicoGHVoxels();
-            if (!DA.GetData(0, ref a)) ;
-            if (!DA.GetData(1, ref b)) ;
+            if (!DA.GetData(0, ref a)) return;
+            if (!DA.GetData(1, ref b)) return;
 
             PicoGHSettings settings = new PicoGHSettings();
             if (!DA.GetData("Settings", ref settings)) return;
@@ -67,8 +67,7 @@ namespace PicoGH
             // Set the PicoGK library settings. 
             Utilities.SetGlobalSettings(settings);
 
-            Voxels result = new Voxels();
-            result.BoolAdd(a.PVoxels);
+            Voxels result = new Voxels(a.PVoxels);
             result.BoolAdd(b.PVoxels);
 
             PicoGHVoxels output = new PicoGHVoxels(result);
