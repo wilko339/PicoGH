@@ -3,6 +3,9 @@ Welcome to PicoGH. This library is a wrapper on top of Leap71's PicoGK, ShapeKer
 
 This project is the beta release version. There are bugs, and things will not work as expected. Please raise issues, and help us out with the development. 
 
+## Latest release
+You can find the latest release in the "releases" box.
+
 ## Structure
 This project contains three submodule dependencies, Leap71_LatticeLibrary, Leap71_ShapeKernel, and PicoGK. These are all forks from the originals and have been made compatible for .NET7, which is what Grasshopper components need to use. Many features of those libraries have been removed since Rhino / Grasshopper features are used instead. I am sure more things can be removed. 
 
