@@ -28,7 +28,7 @@ This class has three important fields:
 Usually, this class will be subclassed into something like a PicoGHPipeSegment which takes care of generating the meshes and voxel fields as required. Sometimes, there may be a reason to directly instantiate a PicoGHVoxels object (such as when we already have our CAD mesh). In this case, the voxel field will be generated directly from the RMesh (via a PMesh). If we want to regenerate our meshes, we call the corresponding PicoGK function to convert the voxel field into a mesh. 
 
 ## Modulations
-Modulations come from ShapeKernel. These are a way of modifying certain geometric parameters with functions, such as varying the radius of a pipe along the length, or around the circumferential direction. Shapes that can be modulated need to implement the IModulate interface. 
+Modulations come from ShapeKernel. These are a way of modifying certain geometric parameters with functions, such as varying the radius of a pipe along the length, or around the circumferential direction. Shapes that can be modulated need to implement the IModulate interface. There are some prebuilt modulation functions already implemented, such as constant, linear, sine and cosine. You can also pass in a list of values.
 
 ## Latticing
 There are some wrappers for the LatticeLibrary, namely PicoGHLattice and PicoGHConformalCellArray. The conformal array uses a PicoGH shape that implements the IConformalArray interface to generate the list of unit cells. Use the "Lattice" component to generate a BCC lattice within the generated conformal cell array.
