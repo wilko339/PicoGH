@@ -14,12 +14,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Leap71.ShapeKernel;
 using PicoGH.Classes;
-using PicoGH.PicoGH.Classes;
 using PicoGK;
 using Rhino.Geometry;
 
@@ -82,17 +80,18 @@ namespace PicoGH.Primitives
             Utilities.SetGlobalSettings(settings);
 
             List<double> normalisedCurveParameters = new List<double>();
-            List<PicoGHPipe> outputPipes = new List<PicoGHPipe>();
 
             for (int i = 0; i < curveDivisions.Value + 1; i++)
             {
                 normalisedCurveParameters.Add((double)i * 1 / curveDivisions.Value);
             }
 
+            List<PicoGHPipe> outputPipes = new List<PicoGHPipe>();
+
             float outerRadius = 1;
             float innerRadius = 0;
 
-            Parallel.For(0, curves.Count, i =>
+            for(int i = 0; i < curves.Count; i++)
             {
                 Curve curve = curves[i].Value;
 
@@ -155,8 +154,7 @@ namespace PicoGH.Primitives
                 uint polarSteps = (uint)Math.Ceiling(circumference / (Library.fVoxelSizeMM * Library.iMeshCoarseningFactor));
 
                 outputPipes.Add(new PicoGHPipe(pipe, lengthSteps, radialSteps, polarSteps));
-                //outputPipes.Add(new PicoGHPipe(pipe));
-            });
+            }
 
             DA.SetDataList(0, outputPipes);
         }

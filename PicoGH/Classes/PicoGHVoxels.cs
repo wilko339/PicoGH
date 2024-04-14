@@ -17,7 +17,6 @@ using System;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using PicoGK;
-using Rhino.DocObjects;
 using Rhino.Geometry;
 
 namespace PicoGH
@@ -27,6 +26,8 @@ namespace PicoGH
         protected Voxels _pVoxels;
         protected PicoGK.Mesh _pMesh;
         protected Rhino.Geometry.Mesh _rMesh;
+        protected Point3d _centroid; 
+
         public PicoGK.Voxels PVoxels
         {
             get 
@@ -34,7 +35,7 @@ namespace PicoGH
                 if (_pVoxels != null)
                 {
                     _pVoxels.CalculateProperties(out var vol, out var _);
-                    if (vol == 0)
+                    if (vol < 0.001)
                     {
                         _pVoxels = GenerateVoxels();
                     }
@@ -73,6 +74,14 @@ namespace PicoGH
             }
         }
 
+        // This should be implemented per shape
+        public Point3d Centroid
+        {
+            get
+            {
+                return RMesh.GetBoundingBox(false).Center;
+            }
+        }
         public PicoGHVoxels() 
         {
             _pMesh = null;
@@ -117,7 +126,7 @@ namespace PicoGH
         public virtual PicoGK.Mesh GeneratePMesh()
         {
             // This is usually overridden by a child class, but sometimes we only have the voxel field (such as converting a mesh to voxels).
-            return _pVoxels.mshAsMesh();
+            return PVoxels.mshAsMesh();
         }
 
         public BoundingBox ClippingBox

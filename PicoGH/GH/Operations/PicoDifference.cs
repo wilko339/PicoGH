@@ -1,34 +1,21 @@
-﻿// Copyright 2024 Toby Wilkinson
-//
-//  Licensed under the Apache License, Version 2.0 (the "License")
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0 
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-//  See the License for the specific language governing permissions and 
-//  limitations under the License.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using PicoGH.Classes;
 using PicoGK;
+using Rhino.Geometry;
 
-namespace PicoGH
+namespace PicoGH.PicoGH.GH.Operations
 {
-    public class ListUnion : GH_Component
+    public class PicoDifference : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the ListUnion class.
+        /// Initializes a new instance of the PicoDifference class.
         /// </summary>
-        public ListUnion()
-          : base("PicoListUnion", "ListUnion",
-              "Unions a list of voxel objects",
+        public PicoDifference()
+          : base("PicoDifference", "Difference",
+              "Calculates the boolean difference between two objects.",
               "PicoGH", "Operations")
         {
         }
@@ -38,7 +25,8 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Input", "I", "Input list of voxel objects to union.", GH_ParamAccess.list);
+            pManager.AddGenericParameter("OperandA", "A", "Operand A", GH_ParamAccess.item);
+            pManager.AddGenericParameter("OperandB", "B", "Operand B", GH_ParamAccess.item);
             pManager.AddGenericParameter("Settings", "S", "PicoGH Settings", GH_ParamAccess.item);
         }
 
@@ -47,7 +35,7 @@ namespace PicoGH
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Voxels", "V", "Output voxels", GH_ParamAccess.item);
+            pManager.AddGenericParameter("OutputVoxels", "V", "Output voxels.", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -56,8 +44,10 @@ namespace PicoGH
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<PicoGHVoxels> input = new List<PicoGHVoxels>();
-            if (!DA.GetDataList("Input", input)) return;
+            PicoGHVoxels a = new PicoGHVoxels();
+            PicoGHVoxels b = new PicoGHVoxels();
+            if (!DA.GetData(0, ref a)) return;
+            if (!DA.GetData(1, ref b)) return;
 
             PicoGHSettings settings = new PicoGHSettings();
             if (!DA.GetData("Settings", ref settings)) return;
@@ -65,17 +55,12 @@ namespace PicoGH
             // Set the PicoGK library settings. 
             Utilities.SetGlobalSettings(settings);
 
-            Voxels boolVox = new Voxels();
+            Voxels result = new Voxels(a.PVoxels);
+            result.BoolSubtract(b.PVoxels);
 
-            foreach (PicoGHVoxels vox in input)
-            {
-                boolVox.BoolAdd(vox.PVoxels);
-            }
-
-            PicoGHVoxels output = new PicoGHVoxels(boolVox);
+            PicoGHVoxels output = new PicoGHVoxels(result);
 
             DA.SetData(0, output);
-
         }
 
         /// <summary>
@@ -96,7 +81,7 @@ namespace PicoGH
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("5A35211D-AC04-4816-97A1-249B34B00D0B"); }
+            get { return new Guid("204A6B89-19F8-4AD5-9625-C224AA700C41"); }
         }
     }
 }

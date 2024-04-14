@@ -109,8 +109,8 @@ namespace PicoGH
                 picoFrames, 
                 (float)innerRadius.Value, 
                 (float)outerRadius.Value, 
-                sMod._lModulation, 
-                rMod._lModulation, 
+                sMod.LineModulation, 
+                rMod.LineModulation, 
                 BasePipeSegment.EMethod.MID_RANGE);
 
             // Here we make sure the construction / preview mesh isn't too overkill
