@@ -12,15 +12,10 @@
 //  See the License for the specific language governing permissions and 
 //  limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Leap71.LatticeLibrary;
 using PicoGK;
 
-namespace PicoGH.PicoGH.Classes.TPMS
+namespace PicoGH.Classes.TPMS
 {
     public class PicoGHGyroid : PicoGHVoxels
     {
@@ -36,6 +31,7 @@ namespace PicoGH.PicoGH.Classes.TPMS
         public PicoGHGyroid(ImplicitSplitWallGyroid gyroid, BBox3 region)
         {
             _gyroid = gyroid;
+            _bbox = region;
         }
 
         /// <summary>
@@ -53,14 +49,11 @@ namespace PicoGH.PicoGH.Classes.TPMS
         {
             if (_voxelRegion == null)
             {
-                return new Voxels(_gyroid, PicoBoundingBox);
+                return new Voxels(_gyroid, _bbox);
             }
             else
             {
-                var toIntersect = new Voxels(_gyroid, _voxelRegion.PicoBoundingBox);
-                toIntersect.BoolIntersect(_voxelRegion.PVoxels);
-
-                return toIntersect;
+                return new Voxels(_gyroid, _voxelRegion.PicoBoundingBox, _voxelRegion.PVoxels);
             }
         }
 
