@@ -6,7 +6,6 @@ using Grasshopper.Kernel.Types;
 using Leap71.LatticeLibrary;
 using PicoGH.Classes;
 using PicoGH.Classes.TPMS;
-using Rhino.Geometry;
 
 namespace PicoGH.GH.Implicit
 {
