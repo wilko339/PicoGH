@@ -16,13 +16,11 @@ using System.Numerics;
 using Leap71.ShapeKernel;
 using PicoGK;
 
-namespace PicoGH.PicoGH.Classes
+namespace PicoGH.Classes
 {
     public class PicoGHImplicitSphere : PicoGHVoxels
     {
         ImplicitSphere _sphere;
-        float _radius;
-        Vector3 _center;
 
         public PicoGHImplicitSphere(ImplicitSphere sphere)
         {
