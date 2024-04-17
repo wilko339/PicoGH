@@ -104,9 +104,9 @@ namespace PicoGH
 
         public virtual Voxels GenerateVoxels()
         {
-            if (_pMesh.FaceCount > 0)
+            if (PMesh.FaceCount > 0)
             {
-                _pVoxels = new Voxels(_pMesh);
+                _pVoxels = new Voxels(PMesh);
                 return _pVoxels;
             }
 
