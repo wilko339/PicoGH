@@ -13,7 +13,7 @@
 //  limitations under the License.
 
 using System;
-
+using System.Numerics;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using PicoGK;
@@ -207,11 +207,26 @@ namespace PicoGH
 
         public override IGH_GeometricGoo Transform(Transform xform)
         {
-            RMesh.Transform(xform);
-            _pMesh = Utilities.RhinoMeshToPicoMesh(RMesh);
-            _pVoxels = new Voxels(PMesh);
 
-            return new PicoGHVoxels(PVoxels);
+            //RMesh.Transform(xform);
+            //_pMesh = Utilities.RhinoMeshToPicoMesh(RMesh);
+            //_pVoxels = new Voxels(PMesh);
+            //return new PicoGHVoxels(_pVoxels);
+
+            if (xform.IsAffine)
+            {
+                Matrix4x4 transform = new Matrix4x4(
+                    (float)xform.M00, (float)xform.M10, (float)xform.M20, (float)xform.M30,
+                    (float)xform.M01, (float)xform.M11, (float)xform.M21, (float)xform.M31,
+                    (float)xform.M02, (float)xform.M12, (float)xform.M22, (float)xform.M32,
+                    (float)xform.M03, (float)xform.M13, (float)xform.M23, (float)xform.M33
+                    );
+
+                Voxels transformed = new Voxels(PVoxels);
+                transformed.Transform(transform);
+                return new PicoGHVoxels(transformed);
+            }
+            return new PicoGHVoxels(new Voxels(PVoxels));
         }
     }
 }
